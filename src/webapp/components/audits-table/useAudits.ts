@@ -16,20 +16,17 @@ export function useAudits() {
     const getRows = useCallback(
         async (
             _search: string,
-            _paging: TablePagination,
+            paging: TablePagination,
             _sorting: TableSorting<DataValueAudit>
         ) => {
-            const audits = await compositionRoot.audits.getAll.execute().toPromise();
+            const result = await compositionRoot.audits.getAll
+                .execute({
+                    page: paging.page,
+                    pageSize: paging.pageSize,
+                })
+                .toPromise();
 
-            return {
-                objects: audits,
-                pager: {
-                    page: 1,
-                    pageSize: 50,
-                    total: audits.length,
-                    pageCount: 1,
-                },
-            };
+            return result;
         },
         [compositionRoot]
     );
@@ -86,7 +83,7 @@ const tableConfig: TableConfig<DataValueAudit> = {
     actions: [],
     paginationOptions: {
         pageSizeOptions: [10, 25, 50, 100],
-        pageSizeInitialValue: 25,
+        pageSizeInitialValue: 10,
         renderPosition: {
             bottom: true,
             top: false,

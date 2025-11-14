@@ -6,17 +6,36 @@ import { AuditType } from "@eyeseetea/d2-api/api/audit";
 import { NamedRef } from "$/domain/entities/Ref";
 import { Ref } from "@eyeseetea/d2-api";
 import { generateUid } from "$/utils/uid";
+import { PaginatedResponse, PaginationParams } from "$/domain/entities/PaginatedResponse";
 
 export class AuditD2Repository implements AuditRepository {
     constructor(private api: D2Api) {}
 
-    public getAll(): FutureData<DataValueAudit[]> {
+    public getAll(params: PaginationParams): FutureData<PaginatedResponse<DataValueAudit>> {
         return apiToFuture(
             this.api.get<D2AuditsResponse>(`/audits/dataValue`, {
                 fields: dataValueFields,
+                page: params.page,
+                pageSize: params.pageSize,
             })
         ).map(response => {
-            return response.dataValueAudits.map(d2Audit => this.buildAudit(d2Audit));
+            const objects = response.dataValueAudits.map(d2Audit => this.buildAudit(d2Audit));
+            const pager = response.pager || {
+                page: params.page,
+                pageSize: params.pageSize,
+                total: objects.length,
+                pageCount: 1,
+            };
+
+            return {
+                objects,
+                pager: {
+                    page: pager.page,
+                    pageSize: pager.pageSize,
+                    total: pager.total,
+                    pageCount: pager.pageCount,
+                },
+            };
         });
     }
 
