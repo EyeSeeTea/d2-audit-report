@@ -1,12 +1,36 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2024-06-26T10:58:19.149Z\n"
+"POT-Creation-Date: 2025-11-14T11:45:20.644Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "Date"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Data Element"
+msgstr ""
+
+msgid "Organisation Unit"
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Search audits"
+msgstr ""
 
 msgid "Add"
 msgstr "Añadir"
@@ -19,6 +43,9 @@ msgstr "Volver"
 
 msgid "Help"
 msgstr "Ayuda"
+
+msgid "Audit"
+msgstr ""
 
 msgid "Hello {{name}}"
 msgstr "Hola {{name}}"
