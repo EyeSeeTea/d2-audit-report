@@ -7,7 +7,7 @@
         "plugin:testing-library/react"
     ],
     "parser": "@typescript-eslint/parser",
-    "ignorePatterns": ["src/**/snapshots/*.ts"],
+    "ignorePatterns": ["src/**/snapshots/*.ts", "scripts/**/*"],
     "rules": {
         "no-console": ["warn", { "allow": ["debug", "warn", "error"] }],
         "prefer-const": "warn",

@@ -1,5 +1,7 @@
 # d2-audit-report
 
+DHIS2 application for viewing audit reports. Can be used as a standalone application or as a reusable NPM library component.
+
 ## Setup
 
 ```
@@ -9,13 +11,32 @@ $ yarn install
 
 ## Build
 
+### Build Application
+
 Build a production distributable DHIS2 zip file:
 
 ```
 $ yarn build
 ```
 
+### Build Library
+
+Build the library for NPM distribution:
+
+```bash
+$ yarn build:lib
+```
+
+This generates:
+
+-   `dist/index.es.js` - ES modules bundle
+-   `dist/index.cjs.js` - CommonJS bundle
+-   `dist/index.d.ts` - TypeScript declarations
+-   `dist/package.json` - Library package.json with name `@eyeseetea/d2-audit-report`
+
 ## Development
+
+### Running the Application
 
 Copy `.env` to `.env.local` and configure DHIS2 instance to use. Then start the development server:
 
@@ -24,6 +45,126 @@ $ yarn start
 ```
 
 Now in your browser, go to `http://localhost:8081`.
+
+### Using the Library in Development (yarn link)
+
+To use this library in another project during development:
+
+1. **Build the library** (in this repository):
+
+```bash
+$ yarn build:lib
+```
+
+2. **In this repository**, navigate to `dist/` and create a global link:
+
+```bash
+$ cd dist
+$ yarn link
+```
+
+3. **In your consuming project**, link to this package:
+
+```bash
+$ yarn link "@eyeseetea/d2-audit-report"
+```
+
+4. **Rebuild the library** (in this repository) whenever you make changes:
+
+```bash
+$ yarn build:lib
+```
+
+5. **To unlink** (in your consuming project):
+
+```bash
+$ yarn unlink "@eyeseetea/d2-audit-report"
+```
+
+## Publishing the Library
+
+To publish the library to NPM, use the automated release script:
+
+```bash
+$ yarn release
+```
+
+This script will:
+
+1. Build the library (`yarn build:lib`)
+2. Publish to NPM from the `dist/` directory with the version from `package.json`
+3. Create a git tag (`v<version>`) and push it to the repository
+
+**Note**:
+
+-   The version is read from the root `package.json`
+-   Beta versions (containing "beta" in the version) will be published with the `beta` tag
+-   Make sure you're logged in to NPM (`npm login`) before running the script
+-   The `dist/package.json` has the correct name (`@eyeseetea/d2-audit-report`) and configuration for publishing
+
+### Manual Publishing (Alternative)
+
+If you prefer to publish manually:
+
+1. Build the library:
+
+```bash
+$ yarn build:lib
+```
+
+2. Navigate to the `dist` directory:
+
+```bash
+$ cd dist
+```
+
+3. Publish to NPM:
+
+```bash
+$ npm publish --access public
+```
+
+## Using the Library
+
+### Installation
+
+```bash
+$ yarn add @eyeseetea/d2-audit-report
+```
+
+### Usage
+
+```tsx
+import { AuditsTable } from "@eyeseetea/d2-audit-report";
+
+function MyComponent() {
+    return <AuditsTable baseUrl="https://play.dhis2.org/dev" />;
+}
+```
+
+### Props
+
+-   **`baseUrl`** (string, required): The base URL of the DHIS2 instance to fetch audit data from.
+
+### Example with Dialog
+
+```tsx
+import { AuditsTable } from "@eyeseetea/d2-audit-report";
+import { Dialog } from "@dhis2/ui";
+
+function MyComponent() {
+    const [showAudits, setShowAudits] = React.useState(false);
+
+    return (
+        <>
+            <button onClick={() => setShowAudits(true)}>View Audits</button>
+            <Dialog open={showAudits} onClose={() => setShowAudits(false)}>
+                <AuditsTable baseUrl="https://play.dhis2.org/dev" />
+            </Dialog>
+        </>
+    );
+}
+```
 
 ## Tests
 

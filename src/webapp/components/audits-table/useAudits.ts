@@ -8,27 +8,22 @@ import {
 } from "@eyeseetea/d2-ui-components";
 import { DataValueAudit } from "$/domain/entities/DataValueAudit";
 import { useCallback } from "react";
-import { useAppContext } from "$/webapp/contexts/app-context";
+import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
 
-export function useAudits() {
-    const { compositionRoot } = useAppContext();
-
+export function useAudits(getAudits: GetAuditsUseCase) {
     const getRows = useCallback(
         async (
             _search: string,
             paging: TablePagination,
             _sorting: TableSorting<DataValueAudit>
         ) => {
-            const result = await compositionRoot.audits.getAll
-                .execute({
-                    page: paging.page,
-                    pageSize: paging.pageSize,
-                })
+            const result = await getAudits
+                .execute({ page: paging.page, pageSize: paging.pageSize })
                 .toPromise();
 
             return result;
         },
-        [compositionRoot]
+        [getAudits]
     );
 
     return useObjectsTable(tableConfig, getRows);

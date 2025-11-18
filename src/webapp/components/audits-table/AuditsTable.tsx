@@ -1,9 +1,9 @@
 import React from "react";
-import { ObjectsList } from "@eyeseetea/d2-ui-components";
-import { useAudits } from "./useAudits";
+import { useAppContext } from "$/webapp/contexts/app-context";
+import { AuditsTableContent } from "./AuditsTableContent";
 
 export const AuditsTable: React.FC = React.memo(() => {
-    const objectsListProps = useAudits();
+    const { compositionRoot } = useAppContext();
 
-    return <ObjectsList {...objectsListProps} />;
+    return <AuditsTableContent getAudits={compositionRoot.audits.getAll} />;
 });

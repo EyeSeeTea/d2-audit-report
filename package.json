@@ -71,6 +71,25 @@
         "vite-plugin-node-stdlib-browser": "^0.2.1",
         "vitest": "^0.32.2"
     },
+    "peerDependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "@dhis2/ui": "^6",
+        "@eyeseetea/d2-ui-components": "^2",
+        "@eyeseetea/d2-api": "^1",
+        "styled-components": "^6"
+    },
+    "peerDependenciesMeta": {
+        "@dhis2/ui": {
+            "optional": false
+        },
+        "@eyeseetea/d2-ui-components": {
+            "optional": false
+        },
+        "@eyeseetea/d2-api": {
+            "optional": false
+        }
+    },
     "scripts": {
         "build-dependencies-visualizer": "vite-bundle-visualizer",
         "check-code": "yarn lint && yarn test",
@@ -88,6 +107,9 @@
         "manifest": "d2-manifest package.json build/manifest.webapp",
         "build-folder": "rm -rf build/ && d2-manifest package.json manifest.webapp && tsc && vite build --outDir=build && yarn run manifest && cp -r i18n icon.png build",
         "build": "yarn localize && VITE_DHIS2_BASE_URL='' VITE_DHIS2_AUTH='' yarn build-folder && rm -f $npm_package_name.zip && cd build && zip --quiet -r ../$npm_package_name.zip *",
+        "build:lib": "vite build --mode library && tsc -p tsconfig.lib.json && yarn run-script scripts/build-lib.ts",
+        "prepublishOnly": "yarn build:lib",
+        "release": "bash scripts/publish.sh",
         "prettify": "prettier \"./**/*.{js,jsx,json,css,ts,tsx}\" --write",
         "extract-pot": "yarn d2-i18n-extract -p src/ -o i18n/",
         "localize": "yarn update-po && d2-i18n-generate -l -n dhis2-skeleton-app -p ./i18n/ -o ./src/locales/",

@@ -1,25 +1,20 @@
-import { UserRepository } from "$/domain/repositories/UserRepository";
 import { AuditD2Repository } from "./data/repositories/AuditD2Repository";
-import { UserD2Repository } from "./data/repositories/UserD2Repository";
 import { AuditRepository } from "./domain/repositories/AuditRepository";
 import { GetAuditsUseCase } from "./domain/usecases/GetAuditsUseCase";
-import { GetCurrentUserUseCase } from "./domain/usecases/GetCurrentUserUseCase";
 import { D2Api } from "./types/d2-api";
 
-export type CompositionRoot = ReturnType<typeof getWebappCompositionRoot>;
+export type CompositionRootLib = ReturnType<typeof getLibCompositionRoot>;
 
 type Repositories = {
-    userRepository: UserRepository;
     auditRepository: AuditRepository;
 };
 
-export function getWebappCompositionRoot(api: D2Api) {
+export function getLibCompositionRoot(baseUrl: string) {
+    const api = new D2Api({ baseUrl: baseUrl });
+
     const repositories = getRepositories(api);
 
     return {
-        users: {
-            getCurrent: new GetCurrentUserUseCase(repositories),
-        },
         audits: {
             getAll: new GetAuditsUseCase(repositories.auditRepository),
         },
@@ -28,7 +23,6 @@ export function getWebappCompositionRoot(api: D2Api) {
 
 function getRepositories(api: D2Api): Repositories {
     return {
-        userRepository: new UserD2Repository(api),
         auditRepository: new AuditD2Repository(api),
     };
 }
