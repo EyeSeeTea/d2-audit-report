@@ -20,5 +20,7 @@ LEFT JOIN dataelement de ON dva.dataelementid = de.dataelementid
 LEFT JOIN categoryoptioncombo aoc ON dva.attributeoptioncomboid = aoc.categoryoptioncomboid
 LEFT JOIN categoryoptioncombo coc ON dva.categoryoptioncomboid = coc.categoryoptioncomboid
 ORDER BY dva.created DESC
+LIMIT ${pageSize}
+OFFSET ${offset}
 
 

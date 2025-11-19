@@ -1,6 +1,5 @@
 import { D2Api } from "$/types/d2-api";
 import { FutureData, apiToFuture } from "$/data/api-futures";
-import { Future } from "$/domain/entities/generic/Future";
 import sqlQuery from "$/data/sql-view/d2-audit-report.sql?raw";
 
 const SQL_VIEW_NAME = "d2-audit-report";
@@ -15,22 +14,28 @@ export function ensureSQLView(api: D2Api): FutureData<string> {
         const existingView = response.objects?.find(view => view.name === SQL_VIEW_NAME);
 
         if (existingView) {
-            return Future.success(existingView.id);
+            return updateSqlView(api, existingView.id);
         }
 
-        return createSqlView(api, SQL_VIEW_NAME, sqlQuery);
+        return createSqlView(api);
     });
 }
 
-function createSqlView(api: D2Api, viewName: string, sqlQuery: string): FutureData<string> {
-    const sqlViewData = {
-        name: viewName,
-        cacheStrategy: "NO_CACHE" as const,
-        description: "SQL View for audit reports",
-        sqlQuery: sqlQuery,
-        type: "QUERY" as const,
-        publicAccess: "--------",
-    };
+function updateSqlView(api: D2Api, viewId: string): FutureData<string> {
+    const sqlViewDataToEdit = { ...sqlViewData, id: viewId };
 
+    return apiToFuture(api.models.sqlViews.put(sqlViewDataToEdit)).map(() => viewId);
+}
+
+function createSqlView(api: D2Api): FutureData<string> {
     return apiToFuture(api.models.sqlViews.post(sqlViewData)).map(response => response.uid);
 }
+
+const sqlViewData = {
+    name: SQL_VIEW_NAME,
+    cacheStrategy: "NO_CACHE" as const,
+    description: "SQL View for audit reports",
+    sqlQuery: sqlQuery,
+    type: "QUERY" as const,
+    publicAccess: "--------",
+};

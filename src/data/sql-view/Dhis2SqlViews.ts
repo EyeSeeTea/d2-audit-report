@@ -4,6 +4,11 @@ import { D2Api } from "$/types/d2-api";
 import { HashMap } from "$/domain/entities/generic/HashMap";
 import { apiToFuture, FutureData } from "$/data/api-futures";
 
+/**
+ * Pagination is realized in SQLView endpoint inmemory,
+ * This class asume pagination in SqlView transforming
+ * pagging parameters to variables (limit, offset) for the SqlView endpoint.
+ */
 export class Dhis2SqlViews {
     constructor(private api: D2Api) {}
 
@@ -18,8 +23,8 @@ export class Dhis2SqlViews {
             GET /api/sqlViews/ID/data
                     ?var=orgUnitId:H8RixfF8ugH
                     ?var=period:2018
-                    &pageSize=10
-                    &page=2
+                    &var=pageSize:50
+                    &var=offset:100
                     &fields=id,name
                     &filter=name:like:abc
         */
@@ -27,7 +32,15 @@ export class Dhis2SqlViews {
             .toPairs()
             .map(([key, value]) => `${key}:${value}`);
 
-        const params = { var: variableParams, ...paging };
+        if (paging?.pageSize !== undefined) {
+            variableParams.push(`pageSize:${paging.pageSize}`);
+        }
+        if (paging?.page !== undefined && paging?.pageSize !== undefined) {
+            const offset = (paging.page - 1) * paging.pageSize;
+            variableParams.push(`offset:${offset}`);
+        }
+
+        const params: Record<string, any> = { var: variableParams };
 
         return apiToFuture(
             this.api
@@ -41,7 +54,18 @@ export class Dhis2SqlViews {
                                 string
                             >
                     );
-                    return { pager: data.pager, rows };
+
+                    const page = paging?.page || 1;
+                    const pageSize = paging?.pageSize || 50;
+
+                    const estimatedPager = {
+                        page,
+                        pageSize,
+                        total: page * pageSize + 1,
+                        pageCount: 1,
+                    };
+
+                    return { pager: estimatedPager, rows };
                 })
         );
     }
