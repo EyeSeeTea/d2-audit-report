@@ -10,6 +10,10 @@ export function apiToFuture<Data>(res: CancelableResponse<Data>): FutureData<Dat
             .catch((err: unknown) => {
                 if (err instanceof Error) {
                     reject(err);
+                } else if (err && typeof err === "object" && "message" in err) {
+                    // Handle DHIS2 API error responses with message field
+                    const message = String(err.message || "Unknown error");
+                    reject(new Error(message));
                 } else {
                     console.error("apiToFuture:uncatched", err);
                     reject(new Error("Unknown error"));

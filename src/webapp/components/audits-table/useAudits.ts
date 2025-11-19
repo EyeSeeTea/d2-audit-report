@@ -7,26 +7,35 @@ import {
     useObjectsTable,
 } from "@eyeseetea/d2-ui-components";
 import { DataValueAudit } from "$/domain/entities/DataValueAudit";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
+import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
 
 export function useAudits(getAudits: GetAuditsUseCase) {
+    const [error, setError] = useState<string | undefined>();
+
     const getRows = useCallback(
         async (
             _search: string,
             paging: TablePagination,
             _sorting: TableSorting<DataValueAudit>
         ) => {
-            const result = await getAudits
-                .execute({ page: paging.page, pageSize: paging.pageSize })
-                .toPromise();
-
-            return result;
+            return new Promise<PaginatedResponse<DataValueAudit>>((resolve, reject) => {
+                return getAudits.execute({ page: paging.page, pageSize: paging.pageSize }).run(
+                    response => {
+                        resolve(response);
+                    },
+                    error => {
+                        setError(error instanceof Error ? error.message : "Unknown error");
+                        reject(error);
+                    }
+                );
+            });
         },
         [getAudits]
     );
 
-    return useObjectsTable(tableConfig, getRows);
+    return { objectsListProps: useObjectsTable(tableConfig, getRows), error };
 }
 
 const columns: TableColumn<DataValueAudit>[] = [
