@@ -2,7 +2,7 @@ import { AuditRepository } from "$/domain/repositories/AuditRepository";
 import { D2Api } from "$/types/d2-api";
 import { FutureData } from "$/data/api-futures";
 import { Future } from "$/domain/entities/generic/Future";
-import { DataValueAudit } from "$/domain/entities/DataValueAudit";
+import { Audit } from "$/domain/entities/Audit";
 import { AuditType } from "@eyeseetea/d2-api/api/audit";
 import { generateUid } from "$/utils/uid";
 import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
@@ -26,7 +26,7 @@ export class AuditD2Repository implements AuditRepository {
         });
     }
 
-    public getAll(filters: AuditsFilters): FutureData<PaginatedResponse<DataValueAudit>> {
+    public getAll(filters: AuditsFilters): FutureData<PaginatedResponse<Audit>> {
         return this.ensureSqlView().flatMap(viewId => {
             return new Dhis2SqlViews(this.api)
                 .query(
@@ -62,16 +62,17 @@ export class AuditD2Repository implements AuditRepository {
         });
     }
 
-    private mapSqlViewResponseToAudits(response: SqlViewGetData<string>): DataValueAudit[] {
+    private mapSqlViewResponseToAudits(response: SqlViewGetData<string>): Audit[] {
         return response.rows.map((row: Record<string, string>) => {
             const getValue = (key: string) => row[key] || "";
 
-            return new DataValueAudit({
+            return new Audit({
                 id: generateUid(),
                 created: getValue("created"),
                 modifiedBy: getValue("modifiedby") || undefined,
                 auditType: getValue("audittype") as AuditType,
                 value: getValue("value") || undefined,
+                dataType: getValue("datatype"),
                 period: {
                     id: getValue("period"),
                 },

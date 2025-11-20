@@ -3,6 +3,7 @@ SELECT
     dva.modifiedby,
     dva.audittype,
     dva.value,
+    'dataValue' as datatype,
     ps.iso as period,
     ou.uid as organisationunit_id,
     ou.name as organisationunit_name,

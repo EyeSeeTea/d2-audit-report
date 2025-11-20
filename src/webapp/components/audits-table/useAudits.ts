@@ -6,7 +6,7 @@ import {
     TableSorting,
     useObjectsTable,
 } from "@eyeseetea/d2-ui-components";
-import { DataValueAudit } from "$/domain/entities/DataValueAudit";
+import { Audit } from "$/domain/entities/Audit";
 import { useCallback, useState } from "react";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
 import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
@@ -18,12 +18,8 @@ export function useAudits(getAudits: GetAuditsUseCase) {
     const [endDate, setEndDate] = useState<Date | null>(null);
 
     const getRows = useCallback(
-        async (
-            _search: string,
-            paging: TablePagination,
-            _sorting: TableSorting<DataValueAudit>
-        ) => {
-            return new Promise<PaginatedResponse<DataValueAudit>>((resolve, reject) => {
+        async (_search: string, paging: TablePagination, _sorting: TableSorting<Audit>) => {
+            return new Promise<PaginatedResponse<Audit>>((resolve, reject) => {
                 const formatDate = (date: Date | null | undefined): string | undefined => {
                     if (!date) return undefined;
                     const year = date.getFullYear();
@@ -71,12 +67,18 @@ export function useAudits(getAudits: GetAuditsUseCase) {
     };
 }
 
-const columns: TableColumn<DataValueAudit>[] = [
+const columns: TableColumn<Audit>[] = [
     {
         name: "created",
         text: i18n.t("Date"),
         sortable: false,
         getValue: row => (row.created ? row.created : "-"),
+    },
+    {
+        name: "dataType",
+        text: i18n.t("Data Type"),
+        sortable: false,
+        getValue: row => row.dataType || "-",
     },
     {
         name: "auditType",
@@ -115,7 +117,7 @@ const columns: TableColumn<DataValueAudit>[] = [
     },
 ];
 
-const tableConfig: TableConfig<DataValueAudit> = {
+const tableConfig: TableConfig<Audit> = {
     columns,
     actions: [],
     paginationOptions: {
