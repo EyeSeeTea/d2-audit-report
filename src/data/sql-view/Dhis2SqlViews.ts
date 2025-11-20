@@ -5,7 +5,7 @@ import { HashMap } from "$/domain/entities/generic/HashMap";
 import { apiToFuture, FutureData } from "$/data/api-futures";
 
 /**
- * Pagination is realized in SQLView endpoint inmemory,
+ * Pagination is realized in SQLView endpoint inmemory in java code,
  * This class asume pagination in SqlView transforming
  * pagging parameters to variables (limit, offset) for the SqlView endpoint.
  */

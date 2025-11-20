@@ -1,8 +1,3 @@
-export type PaginationParams = {
-    page: number;
-    pageSize: number;
-};
-
 export type Pager = {
     page: number;
     pageSize: number;

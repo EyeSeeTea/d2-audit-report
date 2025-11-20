@@ -3,7 +3,6 @@ SELECT
     dva.modifiedby,
     dva.audittype,
     dva.value,
-    dva.periodid as period_id,
     ps.iso as period,
     ou.uid as organisationunit_id,
     ou.name as organisationunit_name,
@@ -19,6 +18,9 @@ LEFT JOIN organisationunit ou ON dva.organisationunitid = ou.organisationunitid
 LEFT JOIN dataelement de ON dva.dataelementid = de.dataelementid
 LEFT JOIN categoryoptioncombo aoc ON dva.attributeoptioncomboid = aoc.categoryoptioncomboid
 LEFT JOIN categoryoptioncombo coc ON dva.categoryoptioncomboid = coc.categoryoptioncomboid
+WHERE 1=1
+    AND dva.created::date >= '${startDate}'
+    AND dva.created::date <= '${endDate}'
 ORDER BY dva.created DESC
 LIMIT ${pageSize}
 OFFSET ${offset}

@@ -14,6 +14,9 @@ import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
 export function useAudits(getAudits: GetAuditsUseCase) {
     const [error, setError] = useState<string | undefined>();
 
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+
     const getRows = useCallback(
         async (
             _search: string,
@@ -21,21 +24,51 @@ export function useAudits(getAudits: GetAuditsUseCase) {
             _sorting: TableSorting<DataValueAudit>
         ) => {
             return new Promise<PaginatedResponse<DataValueAudit>>((resolve, reject) => {
-                return getAudits.execute({ page: paging.page, pageSize: paging.pageSize }).run(
-                    response => {
-                        resolve(response);
-                    },
-                    error => {
-                        setError(error instanceof Error ? error.message : "Unknown error");
-                        reject(error);
-                    }
-                );
+                const formatDate = (date: Date | null | undefined): string | undefined => {
+                    if (!date) return undefined;
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, "0");
+                    const day = String(date.getDate()).padStart(2, "0");
+                    return `${year}-${month}-${day}`;
+                };
+
+                return getAudits
+                    .execute({
+                        page: paging.page,
+                        pageSize: paging.pageSize,
+                        startDate: formatDate(startDate),
+                        endDate: formatDate(endDate),
+                    })
+                    .run(
+                        response => {
+                            resolve(response);
+                        },
+                        error => {
+                            setError(error instanceof Error ? error.message : "Unknown error");
+                            reject(error);
+                        }
+                    );
             });
         },
-        [getAudits]
+        [getAudits, startDate, endDate]
     );
 
-    return { objectsListProps: useObjectsTable(tableConfig, getRows), error };
+    const onStartDateChange = useCallback((date: Date | null) => {
+        setStartDate(date);
+    }, []);
+
+    const onEndDateChange = useCallback((date: Date | null) => {
+        setEndDate(date);
+    }, []);
+
+    return {
+        objectsListProps: useObjectsTable(tableConfig, getRows),
+        error,
+        startDate,
+        endDate,
+        onStartDateChange,
+        onEndDateChange,
+    };
 }
 
 const columns: TableColumn<DataValueAudit>[] = [
@@ -43,7 +76,7 @@ const columns: TableColumn<DataValueAudit>[] = [
         name: "created",
         text: i18n.t("Date"),
         sortable: false,
-        getValue: row => (row.created ? new Date(row.created).toLocaleString() : "-"),
+        getValue: row => (row.created ? row.created : "-"),
     },
     {
         name: "auditType",
@@ -97,5 +130,4 @@ const tableConfig: TableConfig<DataValueAudit> = {
         field: "created",
         order: "desc",
     },
-    searchBoxLabel: i18n.t("Search audits"),
 };
