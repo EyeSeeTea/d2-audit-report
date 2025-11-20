@@ -4,15 +4,13 @@ SELECT
     dva.audittype,
     dva.value,
     'dataValue' as datatype,
-    ps.iso as period,
-    ou.uid as organisationunit_id,
-    ou.name as organisationunit_name,
-    de.uid as dataelement_id,
-    de.name as dataelement_name,
-    aoc.uid as attributeoptioncombo_id,
-    aoc.name as attributeoptioncombo_name,
-    coc.uid as categoryoptioncombo_id,
-    coc.name as categoryoptioncombo_name
+    CONCAT(
+        'Period: ', COALESCE(ps.iso, ''), E'\n',
+        'Organisation Unit: ', COALESCE(ou.name, ou.uid, ''), E'\n',
+        'Data Element: ', COALESCE(de.name, de.uid, ''), E'\n',
+        'Attribute Option Combo: ', COALESCE(aoc.name, aoc.uid, ''), E'\n',
+        'Category Option Combo: ', COALESCE(coc.name, coc.uid, '')
+    ) as related
 FROM datavalueaudit dva
 LEFT JOIN _periodstructure ps ON dva.periodid = ps.periodid
 LEFT JOIN organisationunit ou ON dva.organisationunitid = ou.organisationunitid

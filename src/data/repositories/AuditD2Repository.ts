@@ -73,25 +73,7 @@ export class AuditD2Repository implements AuditRepository {
                 auditType: getValue("audittype") as AuditType,
                 value: getValue("value") || undefined,
                 dataType: getValue("datatype"),
-                period: {
-                    id: getValue("period"),
-                },
-                organisationUnit: {
-                    id: getValue("organisationunit_id"),
-                    name: getValue("organisationunit_name"),
-                },
-                attributeOptionCombo: {
-                    id: getValue("attributeoptioncombo_id"),
-                    name: getValue("attributeoptioncombo_name"),
-                },
-                categoryOptionCombo: {
-                    id: getValue("categoryoptioncombo_id"),
-                    name: getValue("categoryoptioncombo_name"),
-                },
-                dataElement: {
-                    id: getValue("dataelement_id"),
-                    name: getValue("dataelement_name"),
-                },
+                related: getValue("related") || undefined,
             });
         });
     }

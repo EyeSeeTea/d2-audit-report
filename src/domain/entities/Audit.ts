@@ -1,5 +1,3 @@
-import { NamedRef, Ref } from "./Ref";
-
 export type AuditProps = {
     id: string;
     created: string;
@@ -7,11 +5,7 @@ export type AuditProps = {
     auditType: string;
     value?: string;
     dataType: string; // Campo fijo que viene de la SQL view (ej: "dataValue")
-    period?: Ref;
-    organisationUnit?: NamedRef;
-    attributeOptionCombo?: NamedRef;
-    categoryOptionCombo?: NamedRef;
-    dataElement?: NamedRef;
+    related?: string; // Campo unificado con period, organisationUnit, dataElement, etc.
 };
 
 export class Audit {
@@ -21,11 +15,7 @@ export class Audit {
     public readonly auditType: string;
     public readonly value?: string;
     public readonly dataType: string;
-    public readonly period?: Ref;
-    public readonly organisationUnit?: NamedRef;
-    public readonly attributeOptionCombo?: NamedRef;
-    public readonly categoryOptionCombo?: NamedRef;
-    public readonly dataElement?: NamedRef;
+    public readonly related?: string;
 
     constructor(props: AuditProps) {
         this.id = props.id;
@@ -34,10 +24,6 @@ export class Audit {
         this.auditType = props.auditType;
         this.value = props.value;
         this.dataType = props.dataType;
-        this.period = props.period;
-        this.organisationUnit = props.organisationUnit;
-        this.attributeOptionCombo = props.attributeOptionCombo;
-        this.categoryOptionCombo = props.categoryOptionCombo;
-        this.dataElement = props.dataElement;
+        this.related = props.related;
     }
 }
