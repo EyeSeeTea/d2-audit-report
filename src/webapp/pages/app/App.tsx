@@ -6,8 +6,6 @@ import { Feedback } from "@eyeseetea/feedback-component";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 //@ts-ignore
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import LuxonUtils from "@date-io/luxon";
 import { appConfig } from "$/app-config";
 import { CompositionRoot } from "$/CompositionRoot";
 import { Share } from "$/webapp/components/share/Share";
@@ -45,26 +43,24 @@ function App_(props: AppProps) {
     return (
         <MuiThemeProvider theme={muiTheme}>
             <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
-                <MuiPickersUtilsProvider utils={LuxonUtils}>
-                    <SnackbarProvider>
-                        <StyledHeaderBar appName="Audit Report App" />
+                <SnackbarProvider>
+                    <StyledHeaderBar appName="Audit Report App" />
 
-                        {appConfig.feedback && appContext && (
-                            <Feedback
-                                options={appConfig.feedback}
-                                username={appContext.currentUser.username}
-                            />
-                        )}
+                    {appConfig.feedback && appContext && (
+                        <Feedback
+                            options={appConfig.feedback}
+                            username={appContext.currentUser.username}
+                        />
+                    )}
 
-                        <div id="app" className="content">
-                            <AppContext.Provider value={appContext}>
-                                <Router />
-                            </AppContext.Provider>
-                        </div>
+                    <div id="app" className="content">
+                        <AppContext.Provider value={appContext}>
+                            <Router />
+                        </AppContext.Provider>
+                    </div>
 
-                        <Share visible={showShareButton} />
-                    </SnackbarProvider>
-                </MuiPickersUtilsProvider>
+                    <Share visible={showShareButton} />
+                </SnackbarProvider>
             </OldMuiThemeProvider>
         </MuiThemeProvider>
     );

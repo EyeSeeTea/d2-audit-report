@@ -8,5 +8,5 @@
         "skipLibCheck": true,
         "noEmit": false
     },
-    "include": ["src/lib"]
+    "include": ["src/lib", "src/types/declarations.d.ts"]
 }

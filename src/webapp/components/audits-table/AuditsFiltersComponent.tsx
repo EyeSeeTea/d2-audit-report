@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import i18n from "$/utils/i18n";
-import { DatePicker } from "@material-ui/pickers";
-import { DateTime } from "luxon";
+import { DatePicker } from "@eyeseetea/d2-ui-components";
+import { Moment } from "moment";
 
 interface AuditsFiltersComponentProps {
     startDate: Date | null | undefined;
@@ -18,38 +18,37 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
     onEndDateChange,
 }) => {
     const handleStartDateChange = React.useCallback(
-        (date: DateTime | null) => {
-            onStartDateChange(date ? date.toJSDate() : null);
+        (dateM: Moment | null) => {
+            const date = dateM?.toDate() || null;
+            onStartDateChange(date);
         },
         [onStartDateChange]
     );
 
     const handleEndDateChange = React.useCallback(
-        (date: DateTime | null) => {
-            onEndDateChange(date ? date.toJSDate() : null);
+        (dateM: Moment | null) => {
+            const date = dateM?.toDate() || null;
+            onEndDateChange(date);
         },
         [onEndDateChange]
     );
 
-    const startDateValue = startDate ? DateTime.fromJSDate(startDate) : null;
-    const endDateValue = endDate ? DateTime.fromJSDate(endDate) : null;
-
     return (
         <PickersContainer>
-            <DatePicker
-                format="yyyy-MM-dd"
-                label={i18n.t("Start Date")}
-                value={startDateValue}
-                onChange={handleStartDateChange}
-                clearable
-            />
-            <DatePicker
-                format="yyyy-MM-dd"
-                label={i18n.t("End Date")}
-                value={endDateValue}
-                onChange={handleEndDateChange}
-                clearable
-            />
+            <DatePickerContainer>
+                <DatePicker
+                    label={i18n.t("Start Date")}
+                    value={startDate || null}
+                    onChange={handleStartDateChange}
+                />
+            </DatePickerContainer>
+            <DatePickerContainer>
+                <DatePicker
+                    label={i18n.t("End Date")}
+                    value={endDate || null}
+                    onChange={handleEndDateChange}
+                />
+            </DatePickerContainer>
         </PickersContainer>
     );
 };
@@ -59,4 +58,8 @@ const PickersContainer = styled.div`
     column-gap: 10px;
     margin-bottom: 8px;
     margin-left: 16px;
+`;
+
+const DatePickerContainer = styled.div`
+    margin-top: -10px;
 `;
