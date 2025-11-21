@@ -8,8 +8,8 @@ import { tableConfig } from "$/webapp/components/audits-table/tableConfig";
 export function useAudits(getAudits: GetAuditsUseCase) {
     const [error, setError] = useState<string | undefined>();
 
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [endDate, setEndDate] = useState<Date | null>(null);
+    const [startDate, setStartDate] = useState<Date | null>(getOneMonthAgo());
+    const [endDate, setEndDate] = useState<Date | null>(new Date());
 
     const getRows = useCallback(
         async (_search: string, paging: TablePagination, _sorting: TableSorting<Audit>) => {
@@ -60,3 +60,9 @@ export function useAudits(getAudits: GetAuditsUseCase) {
         onEndDateChange,
     };
 }
+
+const getOneMonthAgo = () => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - 1);
+    return date;
+};
