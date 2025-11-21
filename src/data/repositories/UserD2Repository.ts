@@ -17,6 +17,18 @@ export class UserD2Repository implements UserRepository {
         });
     }
 
+    public getAll(): FutureData<User[]> {
+        return apiToFuture(
+            this.api.models.users.get({
+                fields: userFields,
+                paging: false,
+                order: "displayName:asc",
+            })
+        ).map(response => {
+            return response.objects.map(d2User => this.buildUser(d2User));
+        });
+    }
+
     private buildUser(d2User: D2User) {
         return new User({
             id: d2User.id,

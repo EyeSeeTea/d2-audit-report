@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2025-11-19T17:10:15.939Z\n"
-"PO-Revision-Date: 2025-11-19T17:10:15.940Z\n"
+"POT-Creation-Date: 2025-11-21T11:26:48.040Z\n"
+"PO-Revision-Date: 2025-11-21T11:26:48.040Z\n"
 
 msgid "Start Date"
 msgstr ""
@@ -14,34 +14,22 @@ msgstr ""
 msgid "End Date"
 msgstr ""
 
+msgid "User"
+msgstr ""
+
 msgid "Date"
+msgstr ""
+
+msgid "Data Type"
 msgstr ""
 
 msgid "Type"
 msgstr ""
 
-msgid "Data Element"
-msgstr ""
-
-msgid "Organisation Unit"
-msgstr ""
-
-msgid "Period"
-msgstr ""
-
 msgid "Value"
 msgstr ""
 
-msgid "User"
-msgstr ""
-
-msgid "Search audits"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "List"
+msgid "Related"
 msgstr ""
 
 msgid "Back"

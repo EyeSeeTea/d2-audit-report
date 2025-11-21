@@ -6,6 +6,7 @@ import { AuditRepository } from "$/domain/repositories/AuditRepository";
 export type AuditsFilters = {
     startDate?: string;
     endDate?: string;
+    username?: string;
     page: number;
     pageSize: number;
 };

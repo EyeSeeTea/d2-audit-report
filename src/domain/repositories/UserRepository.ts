@@ -3,4 +3,5 @@ import { User } from "$/domain/entities/User";
 
 export interface UserRepository {
     getCurrent(): FutureData<User>;
+    getAll(): FutureData<User[]>;
 }

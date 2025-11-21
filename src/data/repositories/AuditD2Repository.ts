@@ -9,6 +9,7 @@ import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
 import { ensureSQLView } from "$/data/utils/ensureSQLView";
 import { Dhis2SqlViews, SqlViewGetData } from "$/data/sql-view/Dhis2SqlViews";
 import { AuditsFilters } from "$/domain/usecases/GetAuditsUseCase";
+import { encodeUsername } from "$/data/utils/usernameEncoder";
 
 export class AuditD2Repository implements AuditRepository {
     private sqlViewId: string | null = null;
@@ -28,18 +29,17 @@ export class AuditD2Repository implements AuditRepository {
 
     public getAll(filters: AuditsFilters): FutureData<PaginatedResponse<Audit>> {
         return this.ensureSqlView().flatMap(viewId => {
+            const variables: Record<string, string> = {
+                startDate: filters.startDate || "1970-01-01",
+                endDate: filters.endDate || "2100-12-31",
+                username: filters.username ? encodeUsername(filters.username) : "ALL",
+            };
+
             return new Dhis2SqlViews(this.api)
-                .query(
-                    viewId,
-                    {
-                        startDate: filters.startDate || "1970-01-01",
-                        endDate: filters.endDate || "2100-12-31",
-                    },
-                    {
-                        page: filters.page,
-                        pageSize: filters.pageSize,
-                    }
-                )
+                .query(viewId, variables, {
+                    page: filters.page,
+                    pageSize: filters.pageSize,
+                })
                 .map(response => {
                     const objects = this.mapSqlViewResponseToAudits(response);
                     const pager = response.pager || {

@@ -11,5 +11,10 @@ export const AuditsTableLib: React.FC<AuditsTableLibrops> = React.memo(({ baseUr
         return getLibCompositionRoot(baseUrl);
     }, [baseUrl]);
 
-    return <AuditsTableContent getAudits={compositionRoot.audits.getAll} />;
+    return (
+        <AuditsTableContent
+            getAudits={compositionRoot.audits.getAll}
+            getAllUsers={compositionRoot.users.getAll}
+        />
+    );
 });

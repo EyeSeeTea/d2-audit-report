@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2025-11-19T17:10:15.939Z\n"
+"POT-Creation-Date: 2025-11-21T11:26:48.040Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,35 +14,23 @@ msgstr ""
 msgid "End Date"
 msgstr ""
 
+msgid "User"
+msgstr ""
+
 msgid "Date"
+msgstr ""
+
+msgid "Data Type"
 msgstr ""
 
 msgid "Type"
 msgstr ""
 
-msgid "Data Element"
-msgstr ""
-
-msgid "Organisation Unit"
-msgstr ""
-
-msgid "Period"
-msgstr ""
-
 msgid "Value"
 msgstr ""
 
-msgid "User"
+msgid "Related"
 msgstr ""
-
-msgid "Search audits"
-msgstr ""
-
-msgid "Add"
-msgstr "Añadir"
-
-msgid "List"
-msgstr "Listar"
 
 msgid "Back"
 msgstr "Volver"
@@ -52,6 +40,12 @@ msgstr "Ayuda"
 
 msgid "Audit"
 msgstr ""
+
+#~ msgid "Add"
+#~ msgstr "Añadir"
+
+#~ msgid "List"
+#~ msgstr "Listar"
 
 #~ msgid "Hello {{name}}"
 #~ msgstr "Hola {{name}}"

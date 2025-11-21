@@ -1,21 +1,30 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import i18n from "$/utils/i18n";
 import { DatePicker } from "@eyeseetea/d2-ui-components";
 import { Moment } from "moment";
+import { TextField } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { User } from "$/domain/entities/User";
 
 interface AuditsFiltersComponentProps {
     startDate: Date | null | undefined;
     endDate: Date | null | undefined;
+    users: User[];
+    selectedUsername: string | null;
     onStartDateChange: (date: Date | null) => void;
     onEndDateChange: (date: Date | null) => void;
+    onUsernameChange: (username: string | null) => void;
 }
 
 export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
     startDate,
     endDate,
+    users,
+    selectedUsername,
     onStartDateChange,
     onEndDateChange,
+    onUsernameChange,
 }) => {
     const handleStartDateChange = React.useCallback(
         (dateM: Moment | null) => {
@@ -31,6 +40,27 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
             onEndDateChange(date);
         },
         [onEndDateChange]
+    );
+
+    const [inputValue, setInputValue] = useState<string>("");
+
+    const selectedUser = useMemo(() => {
+        if (!selectedUsername) return null;
+        return users.find(user => user.username === selectedUsername) || null;
+    }, [selectedUsername, users]);
+
+    const handleUsernameChange = React.useCallback(
+        (_event: React.ChangeEvent<{}>, value: User | null) => {
+            onUsernameChange(value?.username || null);
+        },
+        [onUsernameChange]
+    );
+
+    const handleInputChange = React.useCallback(
+        (_event: React.ChangeEvent<{}>, newInputValue: string) => {
+            setInputValue(newInputValue);
+        },
+        []
     );
 
     return (
@@ -49,6 +79,21 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
                     onChange={handleEndDateChange}
                 />
             </DatePickerContainer>
+            <AutocompleteContainer>
+                <Autocomplete
+                    id="user-autocomplete"
+                    options={users}
+                    getOptionLabel={(option: User) => `${option.name} (${option.username})`}
+                    value={selectedUser}
+                    inputValue={inputValue}
+                    onInputChange={handleInputChange}
+                    onChange={handleUsernameChange}
+                    style={{ width: 300 }}
+                    renderInput={(params: any) => {
+                        return <TextField {...params} label={i18n.t("User")} variant="standard" />;
+                    }}
+                />
+            </AutocompleteContainer>
         </PickersContainer>
     );
 };
@@ -62,4 +107,13 @@ const PickersContainer = styled.div`
 
 const DatePickerContainer = styled.div`
     margin-top: -10px;
+`;
+
+const AutocompleteContainer = styled.div`
+    min-width: 300px;
+    margin-top: 6px;
+
+    .MuiInputLabel-root.MuiInputLabel-shrink {
+        color: #0000004d;
+    }
 `;

@@ -1,15 +1,19 @@
 import { TablePagination, TableSorting, useObjectsTable } from "@eyeseetea/d2-ui-components";
 import { Audit } from "$/domain/entities/Audit";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
+import { GetAllUsersUseCase } from "$/domain/usecases/GetAllUsersUseCase";
 import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
 import { tableConfig } from "$/webapp/components/audits-table/tableConfig";
+import { User } from "$/domain/entities/User";
 
-export function useAudits(getAudits: GetAuditsUseCase) {
+export function useAudits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersUseCase) {
     const [error, setError] = useState<string | undefined>();
+    const [users, setUsers] = useState<User[]>([]);
 
     const [startDate, setStartDate] = useState<Date | null>(getOneMonthAgo());
     const [endDate, setEndDate] = useState<Date | null>(new Date());
+    const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
 
     const getRows = useCallback(
         async (_search: string, paging: TablePagination, _sorting: TableSorting<Audit>) => {
@@ -28,6 +32,7 @@ export function useAudits(getAudits: GetAuditsUseCase) {
                         pageSize: paging.pageSize,
                         startDate: formatDate(startDate),
                         endDate: formatDate(endDate),
+                        username: selectedUsername || undefined,
                     })
                     .run(
                         response => {
@@ -40,7 +45,7 @@ export function useAudits(getAudits: GetAuditsUseCase) {
                     );
             });
         },
-        [getAudits, startDate, endDate]
+        [getAudits, startDate, endDate, selectedUsername]
     );
 
     const onStartDateChange = useCallback((date: Date | null) => {
@@ -51,13 +56,31 @@ export function useAudits(getAudits: GetAuditsUseCase) {
         setEndDate(date);
     }, []);
 
+    const onUsernameChange = useCallback((username: string | null) => {
+        setSelectedUsername(username);
+    }, []);
+
+    useEffect(() => {
+        getAllUsers.execute().run(
+            usersList => {
+                setUsers(usersList);
+            },
+            error => {
+                setError(error instanceof Error ? error.message : "Error loading users");
+            }
+        );
+    }, [getAllUsers]);
+
     return {
         objectsListProps: useObjectsTable(tableConfig, getRows),
         error,
         startDate,
         endDate,
+        selectedUsername,
+        users,
         onStartDateChange,
         onEndDateChange,
+        onUsernameChange,
     };
 }
 

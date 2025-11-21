@@ -20,6 +20,10 @@ WITH unioned AS (
     LEFT JOIN categoryoptioncombo coc ON dva.categoryoptioncomboid = coc.categoryoptioncomboid
     WHERE dva.created >= '${startDate}'::date
       AND dva.created < ('${endDate}'::date + INTERVAL '1 day')
+      AND (
+        '${username}' = '' OR 
+        MD5(dva.modifiedby) = '${username}'
+      )
 
     UNION ALL
 
@@ -38,11 +42,15 @@ WITH unioned AS (
     LEFT JOIN dataelement de2 ON tedva.dataelementid = de2.dataelementid
     WHERE tedva.created >= '${startDate}'::date
       AND tedva.created < ('${endDate}'::date + INTERVAL '1 day')
+      AND (
+        '${username}' = 'ALL' OR 
+        MD5(tedva.modifiedby) = '${username}'
+      )
 )
 
 SELECT *
 FROM unioned
 ORDER BY created DESC
 LIMIT ${pageSize}
-OFFSET ${offset};
+OFFSET ${offset}
 
