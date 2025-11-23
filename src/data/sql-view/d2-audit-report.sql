@@ -60,6 +60,28 @@ WITH unioned AS (
         '${username}' = 'ALL' OR 
         MD5(tedva.modifiedby) = '${username}'
       )
+
+    UNION ALL
+
+    SELECT 
+       teava.created,
+       teava.modifiedby,
+       teava.audittype,
+       teava.value,
+       'trackedEntityAttributeValue' AS datatype,
+       CONCAT(
+            'Tracked Entity Instance: ', COALESCE(tei.uid, ''), E'\n',
+            'Attribute: ', COALESCE(tea.name, tea.uid, '')
+       ) AS related
+    FROM trackedentityattributevalueaudit teava
+    LEFT JOIN trackedentityinstance tei ON teava.trackedentityinstanceid = tei.trackedentityinstanceid
+    LEFT JOIN trackedentityattribute tea ON teava.trackedentityattributeid = tea.trackedentityattributeid
+    WHERE teava.created >= '${startDate}'::date
+      AND teava.created < ('${endDate}'::date + INTERVAL '1 day')
+      AND (
+        '${username}' = 'ALL' OR 
+        MD5(teava.modifiedby) = '${username}'
+      )
 )
 
 SELECT *
