@@ -82,6 +82,25 @@ WITH unioned AS (
         '${username}' = 'ALL' OR 
         MD5(teava.modifiedby) = '${username}'
       )
+
+    UNION ALL
+
+    SELECT 
+       teia.created,
+       teia.accessedby AS modifiedby,
+       teia.audittype,
+       teia.comment AS value,
+       'trackedEntityInstance' AS datatype,
+       CONCAT(
+            'Tracked Entity Instance: ', COALESCE(teia.trackedentityinstance, '')
+       ) AS related
+    FROM trackedentityinstanceaudit teia
+    WHERE teia.created >= '${startDate}'::date
+      AND teia.created < ('${endDate}'::date + INTERVAL '1 day')
+      AND (
+        '${username}' = 'ALL' OR 
+        MD5(teia.accessedby) = '${username}'
+      )
 )
 
 SELECT *
