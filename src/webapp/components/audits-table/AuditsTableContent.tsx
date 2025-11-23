@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo } from "react";
 import { ObjectsList, useSnackbar } from "@eyeseetea/d2-ui-components";
 import { useAudits } from "./useAudits";
+import { usePaginationTextModifier } from "./usePaginationTextModifier";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
 import { GetAllUsersUseCase } from "$/domain/usecases/GetAllUsersUseCase";
 import { AuditsFiltersComponent } from "$/webapp/components/audits-table/AuditsFiltersComponent";
+import styled from "styled-components";
 
 type AuditsTableContentProps = {
     getAudits: GetAuditsUseCase;
@@ -24,6 +26,11 @@ export const AuditsTableContent: React.FC<AuditsTableContentProps> = React.memo(
             onEndDateChange,
             onUsernameChange,
         } = useAudits(getAudits, getAllUsers);
+
+        const containerRef = usePaginationTextModifier(
+            objectsListProps.pagination,
+            objectsListProps.isLoading
+        );
 
         useEffect(() => {
             if (error) {
@@ -55,9 +62,15 @@ export const AuditsTableContent: React.FC<AuditsTableContentProps> = React.memo(
         );
 
         return (
-            <ObjectsList {...objectsListProps} onChangeSearch={undefined}>
-                {filterComponents}
-            </ObjectsList>
+            <Container ref={containerRef}>
+                <ObjectsList {...objectsListProps} onChangeSearch={undefined}>
+                    {filterComponents}
+                </ObjectsList>
+            </Container>
         );
     }
 );
+
+const Container = styled.div`
+    position: relative;
+`;
