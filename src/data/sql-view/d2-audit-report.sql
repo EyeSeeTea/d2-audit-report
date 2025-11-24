@@ -101,34 +101,6 @@ WITH unioned AS (
         '${username}' = 'ALL' OR 
         MD5(teia.accessedby) = '${username}'
       )
-
-    UNION ALL
-
-    SELECT 
-       daa.created,
-       daa.creator as modifiedby,
-       daa.action AS audittype,
-       daa.action AS value,
-       'dataApproval' AS datatype,
-       CONCAT(
-            'Workflow: ', COALESCE(daw.name, daw.uid, ''), E'\n',
-            'Level: ', COALESCE(al.name, al.uid, ''), E'\n',
-            'Period: ', COALESCE(ps3.iso, ''), E'\n',
-            'Organisation Unit: ', COALESCE(ou2.name, ou2.uid, ''), E'\n',
-            'Attribute Option Combo: ', COALESCE(aoc2.name, aoc2.uid, '')
-       ) AS related
-    FROM dataapprovalaudit daa
-    LEFT JOIN dataapprovallevel al ON daa.levelid = al.dataapprovallevelid 
-    LEFT JOIN dataapprovalworkflow daw ON daa.workflowid = daw.workflowid 
-    LEFT JOIN _periodstructure ps3 ON daa.periodid = ps3.periodid
-    LEFT JOIN organisationunit ou2 ON daa.organisationunitid = ou2.organisationunitid
-    LEFT JOIN categoryoptioncombo aoc2 ON daa.attributeoptioncomboid = aoc2.categoryoptioncomboid
-    WHERE daa.created >= '${startDate}'::date
-      AND daa.created < ('${endDate}'::date + INTERVAL '1 day')
-      AND (
-        '${username}' = 'ALL' OR 
-        MD5(daa.creator) = '${username}'
-      )
 )
 
 SELECT *
