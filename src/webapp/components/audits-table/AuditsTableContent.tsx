@@ -21,10 +21,12 @@ export const AuditsTableContent: React.FC<AuditsTableContentProps> = React.memo(
             startDate,
             endDate,
             selectedUsername,
+            selectedDataType,
             users,
             onStartDateChange,
             onEndDateChange,
             onUsernameChange,
+            onDataTypeChange,
         } = useAudits(getAudits, getAllUsers);
 
         const containerRef = usePaginationTextModifier(
@@ -45,9 +47,11 @@ export const AuditsTableContent: React.FC<AuditsTableContentProps> = React.memo(
                     endDate={endDate}
                     users={users}
                     selectedUsername={selectedUsername}
+                    selectedDataType={selectedDataType}
                     onStartDateChange={onStartDateChange}
                     onEndDateChange={onEndDateChange}
                     onUsernameChange={onUsernameChange}
+                    onDataTypeChange={onDataTypeChange}
                 />
             ),
             [
@@ -55,9 +59,11 @@ export const AuditsTableContent: React.FC<AuditsTableContentProps> = React.memo(
                 endDate,
                 users,
                 selectedUsername,
+                selectedDataType,
                 onStartDateChange,
                 onEndDateChange,
                 onUsernameChange,
+                onDataTypeChange,
             ]
         );
 

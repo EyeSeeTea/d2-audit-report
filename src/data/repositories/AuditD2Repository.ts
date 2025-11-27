@@ -33,6 +33,7 @@ export class AuditD2Repository implements AuditRepository {
                 startDate: filters.startDate || "1970-01-01",
                 endDate: filters.endDate || "2100-12-31",
                 username: filters.username ? encodeUsername(filters.username) : "ALL",
+                dataType: filters.dataType || "ALL",
             };
 
             return new Dhis2SqlViews(this.api)

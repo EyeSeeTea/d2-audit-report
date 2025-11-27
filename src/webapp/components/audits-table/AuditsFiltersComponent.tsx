@@ -6,25 +6,38 @@ import { Moment } from "moment";
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { User } from "$/domain/entities/User";
+import { Dropdown } from "$/webapp/components/dropdown/Dropdown";
+import { DropdownItem } from "$/webapp/components/dropdown/GenericDropdown";
 
 interface AuditsFiltersComponentProps {
     startDate: Date | null | undefined;
     endDate: Date | null | undefined;
     users: User[];
     selectedUsername: string | null;
+    selectedDataType: string | undefined;
     onStartDateChange: (date: Date | null) => void;
     onEndDateChange: (date: Date | null) => void;
     onUsernameChange: (username: string | null) => void;
+    onDataTypeChange: (dataType: string | undefined) => void;
 }
+
+const dataTypeOptions: DropdownItem[] = [
+    { value: "dataValue", text: "Data Value" },
+    { value: "trackedEntityDataValue", text: "Tracked Entity Data Value" },
+    { value: "trackedEntityAttributeValue", text: "Tracked Entity Attribute Value" },
+    { value: "trackedEntityInstance", text: "Tracked Entity Instance" },
+];
 
 export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
     startDate,
     endDate,
     users,
     selectedUsername,
+    selectedDataType,
     onStartDateChange,
     onEndDateChange,
     onUsernameChange,
+    onDataTypeChange,
 }) => {
     const handleStartDateChange = React.useCallback(
         (dateM: Moment | null) => {
@@ -79,6 +92,14 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
                     onChange={handleEndDateChange}
                 />
             </DatePickerContainer>
+            <DropdownContainer>
+                <Dropdown
+                    label={i18n.t("Data Type")}
+                    items={dataTypeOptions}
+                    value={selectedDataType}
+                    onChange={onDataTypeChange}
+                />
+            </DropdownContainer>
             <AutocompleteContainer>
                 <Autocomplete
                     id="user-autocomplete"
@@ -111,9 +132,13 @@ const DatePickerContainer = styled.div`
 
 const AutocompleteContainer = styled.div`
     min-width: 300px;
-    margin-top: 6px;
+    margin-top: 14px;
 
     .MuiInputLabel-root.MuiInputLabel-shrink {
         color: #0000004d;
     }
+`;
+
+const DropdownContainer = styled.div`
+    margin-top: 14px;
 `;

@@ -24,8 +24,12 @@ WITH unioned AS (
     WHERE dva.created >= '${startDate}'::date
       AND dva.created < ('${endDate}'::date + INTERVAL '1 day')
       AND (
-        '${username}' = '' OR 
+        '${username}' = 'ALL' OR 
         MD5(dva.modifiedby) = '${username}'
+      )
+      AND (
+        '${dataType}' = 'ALL' OR 
+        '${dataType}' = 'dataValue'
       )
 
     UNION ALL
@@ -60,6 +64,10 @@ WITH unioned AS (
         '${username}' = 'ALL' OR 
         MD5(tedva.modifiedby) = '${username}'
       )
+      AND (
+        '${dataType}' = 'ALL' OR 
+        '${dataType}' = 'trackedEntityDataValue'
+      )
 
     UNION ALL
 
@@ -82,6 +90,10 @@ WITH unioned AS (
         '${username}' = 'ALL' OR 
         MD5(teava.modifiedby) = '${username}'
       )
+      AND (
+        '${dataType}' = 'ALL' OR 
+        '${dataType}' = 'trackedEntityAttributeValue'
+      )
 
     UNION ALL
 
@@ -100,6 +112,10 @@ WITH unioned AS (
       AND (
         '${username}' = 'ALL' OR 
         MD5(teia.accessedby) = '${username}'
+      )
+      AND (
+        '${dataType}' = 'ALL' OR 
+        '${dataType}' = 'trackedEntityInstance'
       )
 )
 

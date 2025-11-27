@@ -14,6 +14,7 @@ export function useAudits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersU
     const [startDate, setStartDate] = useState<Date | null>(getOneMonthAgo());
     const [endDate, setEndDate] = useState<Date | null>(new Date());
     const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+    const [selectedDataType, setSelectedDataType] = useState<string | undefined>(undefined);
 
     const getRows = useCallback(
         async (_search: string, paging: TablePagination, _sorting: TableSorting<Audit>) => {
@@ -33,6 +34,7 @@ export function useAudits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersU
                         startDate: formatDate(startDate),
                         endDate: formatDate(endDate),
                         username: selectedUsername || undefined,
+                        dataType: selectedDataType,
                     })
                     .run(
                         response => {
@@ -45,7 +47,7 @@ export function useAudits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersU
                     );
             });
         },
-        [getAudits, startDate, endDate, selectedUsername]
+        [getAudits, startDate, endDate, selectedUsername, selectedDataType]
     );
 
     const onStartDateChange = useCallback((date: Date | null) => {
@@ -58,6 +60,10 @@ export function useAudits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersU
 
     const onUsernameChange = useCallback((username: string | null) => {
         setSelectedUsername(username);
+    }, []);
+
+    const onDataTypeChange = useCallback((dataType: string | undefined) => {
+        setSelectedDataType(dataType);
     }, []);
 
     useEffect(() => {
@@ -77,10 +83,12 @@ export function useAudits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersU
         startDate,
         endDate,
         selectedUsername,
+        selectedDataType,
         users,
         onStartDateChange,
         onEndDateChange,
         onUsernameChange,
+        onDataTypeChange,
     };
 }
 

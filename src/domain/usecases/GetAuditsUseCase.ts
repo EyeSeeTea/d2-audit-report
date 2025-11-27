@@ -7,6 +7,7 @@ export type AuditsFilters = {
     startDate?: string;
     endDate?: string;
     username?: string;
+    dataType?: string;
     page: number;
     pageSize: number;
 };
