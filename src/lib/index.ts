@@ -1,2 +1,2 @@
-export { AuditsTableLib as AuditsTable } from "./AuditsTableLib";
-export type { AuditsTableLibrops as AuditsTableProps } from "./AuditsTableLib";
+export { AuditsLib as Audits } from "./AuditsLib";
+export type { AuditsLibProps as AuditsProps } from "./AuditsLib";

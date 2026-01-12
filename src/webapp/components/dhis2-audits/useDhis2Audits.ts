@@ -4,10 +4,10 @@ import { useCallback, useState, useEffect } from "react";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
 import { GetAllUsersUseCase } from "$/domain/usecases/GetAllUsersUseCase";
 import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
-import { tableConfig } from "$/webapp/components/audits-table/tableConfig";
+import { tableConfig } from "$/webapp/components/dhis2-audits/tableConfig";
 import { User } from "$/domain/entities/User";
 
-export function useAudits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersUseCase) {
+export function useDhis2Audits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersUseCase) {
     const [error, setError] = useState<string | undefined>();
     const [users, setUsers] = useState<User[]>([]);
 

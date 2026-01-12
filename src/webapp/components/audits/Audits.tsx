@@ -1,12 +1,12 @@
 import React from "react";
 import { useAppContext } from "$/webapp/contexts/app-context";
-import { AuditsTableContent } from "./AuditsTableContent";
+import { AuditsContent } from "$/webapp/components/audits-content/AuditsContent";
 
-export const AuditsTable: React.FC = React.memo(() => {
+export const Audits: React.FC = React.memo(() => {
     const { compositionRoot } = useAppContext();
 
     return (
-        <AuditsTableContent
+        <AuditsContent
             getAudits={compositionRoot.audits.getAll}
             getAllUsers={compositionRoot.users.getAll}
         />

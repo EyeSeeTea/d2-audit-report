@@ -132,7 +132,7 @@ const DatePickerContainer = styled.div`
 
 const AutocompleteContainer = styled.div`
     min-width: 300px;
-    margin-top: 14px;
+    margin-top: 6px;
 
     .MuiInputLabel-root.MuiInputLabel-shrink {
         color: #0000004d;

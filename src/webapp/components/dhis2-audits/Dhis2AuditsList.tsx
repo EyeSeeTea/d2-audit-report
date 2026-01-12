@@ -1,18 +1,18 @@
 import React, { useEffect, useMemo } from "react";
 import { ObjectsList, useSnackbar } from "@eyeseetea/d2-ui-components";
-import { useAudits } from "./useAudits";
+import { useDhis2Audits } from "./useDhis2Audits";
 import { usePaginationTextModifier } from "./usePaginationTextModifier";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
 import { GetAllUsersUseCase } from "$/domain/usecases/GetAllUsersUseCase";
-import { AuditsFiltersComponent } from "$/webapp/components/audits-table/AuditsFiltersComponent";
+import { AuditsFiltersComponent } from "$/webapp/components/dhis2-audits/AuditsFiltersComponent";
 import styled from "styled-components";
 
-type AuditsTableContentProps = {
+type Dhis2AuditsListProps = {
     getAudits: GetAuditsUseCase;
     getAllUsers: GetAllUsersUseCase;
 };
 
-export const AuditsTableContent: React.FC<AuditsTableContentProps> = React.memo(
+export const Dhis2AuditsList: React.FC<Dhis2AuditsListProps> = React.memo(
     ({ getAudits, getAllUsers }) => {
         const snackbar = useSnackbar();
         const {
@@ -27,7 +27,7 @@ export const AuditsTableContent: React.FC<AuditsTableContentProps> = React.memo(
             onEndDateChange,
             onUsernameChange,
             onDataTypeChange,
-        } = useAudits(getAudits, getAllUsers);
+        } = useDhis2Audits(getAudits, getAllUsers);
 
         const containerRef = usePaginationTextModifier(
             objectsListProps.pagination,
