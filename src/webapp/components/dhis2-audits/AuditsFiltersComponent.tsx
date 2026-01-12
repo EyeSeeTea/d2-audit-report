@@ -124,6 +124,8 @@ const PickersContainer = styled.div`
     column-gap: 10px;
     margin-bottom: 8px;
     margin-left: 16px;
+    flex-wrap: wrap;
+    align-items: flex-start;
 `;
 
 const DatePickerContainer = styled.div`
@@ -132,7 +134,9 @@ const DatePickerContainer = styled.div`
 
 const AutocompleteContainer = styled.div`
     min-width: 300px;
+    max-width: 300px;
     margin-top: 6px;
+    flex-shrink: 0;
 
     .MuiInputLabel-root.MuiInputLabel-shrink {
         color: #0000004d;

@@ -1,5 +1,7 @@
+import { Id } from "$/domain/entities/Ref";
+
 export type AuditProps = {
-    id: string;
+    id: Id;
     created: string;
     modifiedBy?: string;
     auditType: string;
@@ -9,7 +11,7 @@ export type AuditProps = {
 };
 
 export class Audit {
-    public readonly id: string;
+    public readonly id: Id;
     public readonly created: string;
     public readonly modifiedBy?: string;
     public readonly auditType: string;

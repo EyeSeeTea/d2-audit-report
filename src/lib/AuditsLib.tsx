@@ -2,19 +2,32 @@ import React, { useMemo } from "react";
 import { getLibCompositionRoot } from "$/CompositionRootLib";
 import { AuditsContent } from "$/webapp/components/audits-content/AuditsContent";
 
-export type AuditsLibProps = {
-    baseUrl: string;
+type d2LoggerAuditsConfig = {
+    orgUnitId: string;
+    programId: string;
 };
 
-export const AuditsLib: React.FC<AuditsLibProps> = React.memo(({ baseUrl }) => {
-    const compositionRoot = useMemo(() => {
-        return getLibCompositionRoot(baseUrl);
-    }, [baseUrl]);
+export type AuditsLibProps = {
+    title: string;
+    baseUrl: string;
+    d2LoggerAuditsConfig?: d2LoggerAuditsConfig;
+};
 
-    return (
-        <AuditsContent
-            getAudits={compositionRoot.audits.getAll}
-            getAllUsers={compositionRoot.users.getAll}
-        />
-    );
-});
+export const AuditsLib: React.FC<AuditsLibProps> = React.memo(
+    ({ title, baseUrl, d2LoggerAuditsConfig }) => {
+        const compositionRoot = useMemo(() => {
+            return getLibCompositionRoot(baseUrl);
+        }, [baseUrl]);
+
+        return (
+            <AuditsContent
+                title={title}
+                getAudits={compositionRoot.audits.getAll}
+                getAllUsers={compositionRoot.users.getAll}
+                d2LoggerAuditsConfig={
+                    d2LoggerAuditsConfig ? { ...d2LoggerAuditsConfig, baseUrl } : undefined
+                }
+            />
+        );
+    }
+);
