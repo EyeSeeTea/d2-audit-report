@@ -135,11 +135,42 @@ const DatePickerContainer = styled.div`
 const AutocompleteContainer = styled.div`
     min-width: 300px;
     max-width: 300px;
-    margin-top: 6px;
+    margin-top: 14px;
     flex-shrink: 0;
 
-    .MuiInputLabel-root.MuiInputLabel-shrink {
-        color: #0000004d;
+    /* Force styles with higher specificity for library usage */
+    && .MuiAutocomplete-root {
+        height: 40px !important;
+    }
+
+    && .MuiFormControl-root {
+        height: 40px !important;
+    }
+
+    && .MuiInputLabel-root {
+        top: -9px !important;
+        margin-left: 10px !important;
+        color: #aaaaaa !important;
+        
+        &.MuiInputLabel-shrink {
+            color: #0000004d !important;
+        }
+        
+        &.Mui-focused {
+            color: #aaaaaa !important;
+        }
+    }
+
+    && .MuiInputBase-root {
+        height: 40px !important;
+        margin-top: 0 !important;
+        margin-left: 10px !important;
+    }
+
+    && .MuiInputBase-input {
+        height: 40px !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
     }
 `;
 
