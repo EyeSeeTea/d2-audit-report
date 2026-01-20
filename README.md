@@ -134,22 +134,55 @@ $ yarn add @eyeseetea/d2-audit-report
 
 ### Usage
 
+**Basic usage (DHIS2 audits only):**
+
 ```tsx
-import { AuditsTable } from "@eyeseetea/d2-audit-report";
+import { Audits } from "@eyeseetea/d2-audit-report";
 
 function MyComponent() {
-    return <AuditsTable baseUrl="https://play.dhis2.org/dev" />;
+    return (
+        <Audits
+            title="Audit Report"
+            baseUrl="https://play.dhis2.org/dev"
+        />
+    );
+}
+```
+
+**With D2Logger audits enabled:**
+
+```tsx
+import { Audits } from "@eyeseetea/d2-audit-report";
+
+function MyComponent() {
+    return (
+        <Audits
+            title="Audit Report"
+            baseUrl="https://play.dhis2.org/dev"
+            d2LoggerAuditsConfig={{
+                orgUnitId: "orgUnitIdExample",
+                programId: "programIdExample",
+            }}
+        />
+    );
 }
 ```
 
 ### Props
 
 -   **`baseUrl`** (string, required): The base URL of the DHIS2 instance to fetch audit data from.
+-   **`title`** (string, optional): Title to display above the audit table.
+-   **`d2LoggerAuditsConfig`** (object, optional): Configuration object to enable D2Logger audits. If not provided, only DHIS2 audits will be displayed. The object should contain:
+    -   **`orgUnitId`** (string, required): Organization unit ID for D2Logger audits.
+    -   **`programId`** (string, required): Program ID for D2Logger audits.
+    -   **`baseUrl`** (string, required): Base URL for D2Logger API (automatically set from the `baseUrl` prop).
+
+**Note**: If `d2LoggerAuditsConfig` is not provided, the component will only display DHIS2 audits. To view both DHIS2 and D2Logger audits, you must provide the `d2LoggerAuditsConfig` object.
 
 ### Example with Dialog
 
 ```tsx
-import { AuditsTable } from "@eyeseetea/d2-audit-report";
+import { Audits } from "@eyeseetea/d2-audit-report";
 import { Dialog } from "@dhis2/ui";
 
 function MyComponent() {
@@ -159,7 +192,14 @@ function MyComponent() {
         <>
             <button onClick={() => setShowAudits(true)}>View Audits</button>
             <Dialog open={showAudits} onClose={() => setShowAudits(false)}>
-                <AuditsTable baseUrl="https://play.dhis2.org/dev" />
+                <Audits
+                   title={i18n.t("Notifications")}
+                   baseUrl={"urlExample"}
+                   d2LoggerAuditsConfig={{
+                    orgUnitId: "orgUnitIdExample",
+                    programId: "programIdExample",
+                   }}
+            />
             </Dialog>
         </>
     );
