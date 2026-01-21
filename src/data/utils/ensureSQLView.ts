@@ -16,7 +16,6 @@ export function ensureSQLView(api: D2Api): FutureData<string> {
 
         if (!existingView) {
             return createSqlView(api);
-            
         } else {
             //return updateSqlView(api, existingView.id);
             return Future.success(existingView.id);

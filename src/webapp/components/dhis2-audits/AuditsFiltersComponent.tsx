@@ -151,11 +151,11 @@ const AutocompleteContainer = styled.div`
         top: -9px !important;
         margin-left: 10px !important;
         color: #aaaaaa !important;
-        
+
         &.MuiInputLabel-shrink {
             color: #0000004d !important;
         }
-        
+
         &.Mui-focused {
             color: #aaaaaa !important;
         }
