@@ -35,18 +35,18 @@ export const AuditSelector: React.FC<ViewsSelectorProps> = React.memo(props => {
                 textColor="primary"
             >
                 <StyledTab
-                    label={showLabels ? dhis2TabTitle || i18n.t("Dhis2") : undefined}
-                    aria-label={dhis2TabTitle || i18n.t("Dhis2")}
-                    key="dhis2"
-                    //icon={<Dhis2Icon />}
-                    title={dhis2TabTitle || i18n.t("Dhis2")}
-                />
-                <StyledTab
                     label={showLabels ? d2LoggerTabTitle || i18n.t("D2Logger") : undefined}
                     aria-label={d2LoggerTabTitle || i18n.t("D2Logger")}
                     key="d2logger"
                     //icon={<Dhis2Icon />}
                     title={d2LoggerTabTitle || i18n.t("D2Logger")}
+                />
+                <StyledTab
+                    label={showLabels ? dhis2TabTitle || i18n.t("Dhis2") : undefined}
+                    aria-label={dhis2TabTitle || i18n.t("Dhis2")}
+                    key="dhis2"
+                    //icon={<Dhis2Icon />}
+                    title={dhis2TabTitle || i18n.t("Dhis2")}
                 />
             </Tabs>
         </StyledPaper>
