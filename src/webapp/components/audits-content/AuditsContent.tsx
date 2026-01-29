@@ -14,11 +14,13 @@ type AuditsContentProps = {
     getAllUsers: GetAllUsersUseCase;
     d2LoggerAuditsConfig: Maybe<D2LoggerAuditsConfig>;
     title?: string;
+    d2LoggerTabTitle?: string;
+    dhis2TabTitle?: string;
 };
 
 export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
-    ({ getAudits, getAllUsers, d2LoggerAuditsConfig, title }) => {
-        const [currentViewKey, setCurrentViewKey] = useState<ViewKey>("dhis2");
+    ({ getAudits, getAllUsers, d2LoggerAuditsConfig, title, d2LoggerTabTitle, dhis2TabTitle }) => {
+        const [currentViewKey, setCurrentViewKey] = useState<ViewKey>("d2logger");
 
         return d2LoggerAuditsConfig ? (
             <>
@@ -30,6 +32,8 @@ export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
                         showLabels={true}
                         currentViewKey={currentViewKey}
                         onChange={setCurrentViewKey}
+                        d2LoggerTabTitle={d2LoggerTabTitle}
+                        dhis2TabTitle={dhis2TabTitle}
                     />
                 </HeaderContainer>
                 <Container>
