@@ -24,7 +24,7 @@ export const AuditSelector: React.FC<ViewsSelectorProps> = React.memo(props => {
         [onChange]
     );
 
-    const tabIndex = useMemo(() => (currentViewKey === "dhis2" ? 0 : 1), [currentViewKey]);
+    const tabIndex = useMemo(() => (currentViewKey === "d2logger" ? 0 : 1), [currentViewKey]);
 
     return (
         <StyledPaper>
