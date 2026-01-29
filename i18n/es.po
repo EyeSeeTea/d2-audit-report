@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2026-01-12T12:42:10.354Z\n"
+"POT-Creation-Date: 2026-01-29T14:47:10.811Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-msgid "Dhis2"
+msgid "D2Logger"
 msgstr ""
 
-msgid "D2Logger"
+msgid "Dhis2"
 msgstr ""
 
 msgid "Audit"
