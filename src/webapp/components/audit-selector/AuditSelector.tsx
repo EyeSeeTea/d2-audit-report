@@ -18,7 +18,7 @@ export const AuditSelector: React.FC<ViewsSelectorProps> = React.memo(props => {
 
     const setCurrentTab = React.useCallback(
         (_event: React.ChangeEvent<{}>, newTabIndex: number) => {
-            const newViewKey = newTabIndex === 0 ? "dhis2" : "d2logger";
+            const newViewKey = newTabIndex === 0 ? "d2logger" : "dhis2";
             onChange(newViewKey);
         },
         [onChange]
