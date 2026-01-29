@@ -9,10 +9,12 @@ interface ViewsSelectorProps {
     currentViewKey: ViewKey;
     onChange(view: ViewKey): void;
     showLabels?: boolean;
+    d2LoggerTabTitle?: string;
+    dhis2TabTitle?: string;
 }
 
 export const AuditSelector: React.FC<ViewsSelectorProps> = React.memo(props => {
-    const { onChange, currentViewKey, showLabels } = props;
+    const { onChange, currentViewKey, showLabels, d2LoggerTabTitle, dhis2TabTitle } = props;
 
     const setCurrentTab = React.useCallback(
         (_event: React.ChangeEvent<{}>, newTabIndex: number) => {
@@ -33,18 +35,18 @@ export const AuditSelector: React.FC<ViewsSelectorProps> = React.memo(props => {
                 textColor="primary"
             >
                 <StyledTab
-                    label={showLabels ? i18n.t("Dhis2") : undefined}
-                    aria-label={i18n.t("Dhis2")}
+                    label={showLabels ? dhis2TabTitle || i18n.t("Dhis2") : undefined}
+                    aria-label={dhis2TabTitle || i18n.t("Dhis2")}
                     key="dhis2"
                     //icon={<Dhis2Icon />}
-                    title={i18n.t("Dhis2")}
+                    title={dhis2TabTitle || i18n.t("Dhis2")}
                 />
                 <StyledTab
-                    label={showLabels ? i18n.t("D2Logger") : undefined}
-                    aria-label={i18n.t("D2Logger")}
+                    label={showLabels ? d2LoggerTabTitle || i18n.t("D2Logger") : undefined}
+                    aria-label={d2LoggerTabTitle || i18n.t("D2Logger")}
                     key="d2logger"
                     //icon={<Dhis2Icon />}
-                    title={i18n.t("D2Logger")}
+                    title={d2LoggerTabTitle || i18n.t("D2Logger")}
                 />
             </Tabs>
         </StyledPaper>
