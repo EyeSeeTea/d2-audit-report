@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Typography from "@material-ui/core/Typography";
 import { Dhis2Audits } from "$/webapp/components/dhis2-audits/Dhis2Audits";
 import { d2LoggerAudits as D2LoggerAudits } from "$/webapp/components/d2logger-audits/d2LoggerAudits";
 import { GetAllUsersUseCase } from "$/domain/usecases/GetAllUsersUseCase";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
-import { AuditSelector, ViewKey } from "$/webapp/components/audit-selector/AuditSelector";
+import { ViewKey } from "$/webapp/components/audit-selector/AuditSelector";
 import { Maybe } from "$/utils/ts-utils";
 import { D2LoggerAuditsConfig } from "$/types/D2LoggerAuditsConfig";
 import styled from "styled-components";
+import { Header } from "$/webapp/components/header/Header";
 
 type AuditsContentProps = {
     getAudits: GetAuditsUseCase;
@@ -16,26 +16,39 @@ type AuditsContentProps = {
     title?: string;
     d2LoggerTabTitle?: string;
     dhis2TabTitle?: string;
+    showBackButton?: boolean;
+    onBackClick?: () => void;
+    hasGutterBottom?: boolean;
 };
 
 export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
-    ({ getAudits, getAllUsers, d2LoggerAuditsConfig, title, d2LoggerTabTitle, dhis2TabTitle }) => {
+    ({
+        getAudits,
+        getAllUsers,
+        d2LoggerAuditsConfig,
+        title,
+        d2LoggerTabTitle,
+        dhis2TabTitle,
+        showBackButton = false,
+        onBackClick,
+        hasGutterBottom = false,
+    }) => {
         const [currentViewKey, setCurrentViewKey] = useState<ViewKey>("d2logger");
 
         return d2LoggerAuditsConfig ? (
             <>
-                <HeaderContainer>
-                    <Title variant="h5" gutterBottom>
-                        {title || "\u00A0"}
-                    </Title>
-                    <AuditSelector
-                        showLabels={true}
-                        currentViewKey={currentViewKey}
-                        onChange={setCurrentViewKey}
-                        d2LoggerTabTitle={d2LoggerTabTitle}
-                        dhis2TabTitle={dhis2TabTitle}
-                    />
-                </HeaderContainer>
+                <Header
+                    currentViewKey={currentViewKey}
+                    onChangeView={setCurrentViewKey}
+                    title={title}
+                    d2LoggerTabTitle={d2LoggerTabTitle}
+                    dhis2TabTitle={dhis2TabTitle}
+                    showBackButton={showBackButton}
+                    onBackClick={onBackClick}
+                    hasGutterBottom={hasGutterBottom}
+                    hasD2LoggerAudits
+                />
+
                 <Container>
                     {currentViewKey === "dhis2" ? (
                         <Dhis2Audits getAudits={getAudits} getAllUsers={getAllUsers} />
@@ -50,35 +63,20 @@ export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
             </>
         ) : (
             <>
-                {title && (
-                    <Title variant="h5" gutterBottom>
-                        {title}
-                    </Title>
-                )}
+                <Header
+                    currentViewKey={currentViewKey}
+                    onChangeView={setCurrentViewKey}
+                    title={title}
+                    showBackButton={showBackButton}
+                    onBackClick={onBackClick}
+                    hasD2LoggerAudits={false}
+                    hasGutterBottom={hasGutterBottom}
+                />
                 <Dhis2Audits getAudits={getAudits} getAllUsers={getAllUsers} />
             </>
         );
     }
 );
-
-const HeaderContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 16px;
-    min-height: 40px;
-`;
-
-const Title = styled(Typography)`
-    display: inline-block;
-    font-weight: 300;
-    margin: 0;
-    flex: 1;
-    min-width: 0;
-    visibility: ${props => (props.children === "\u00A0" ? "hidden" : "visible")};
-`;
 
 const Container = styled.div`
     height: 80vh;

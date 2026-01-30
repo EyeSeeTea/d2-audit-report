@@ -140,12 +140,7 @@ $ yarn add @eyeseetea/d2-audit-report
 import { Audits } from "@eyeseetea/d2-audit-report";
 
 function MyComponent() {
-    return (
-        <Audits
-            title="Audit Report"
-            baseUrl="https://play.dhis2.org/dev"
-        />
-    );
+    return <Audits title="Audit Report" baseUrl="https://play.dhis2.org/dev" />;
 }
 ```
 
@@ -163,6 +158,9 @@ function MyComponent() {
                 orgUnitId: "orgUnitIdExample",
                 programId: "programIdExample",
             }}
+            showBackButton={true}
+            d2LoggerTabTitle="Logs"
+            dhis2TabTitle="Audits"
         />
     );
 }
@@ -172,6 +170,10 @@ function MyComponent() {
 
 -   **`baseUrl`** (string, required): The base URL of the DHIS2 instance to fetch audit data from.
 -   **`title`** (string, optional): Title to display above the audit table.
+-   **`d2LoggerTabTitle`** (string, optional): Title to display in d2Logger tab.
+-   **`dhis2TabTitle`** (string, optional): Title to display in dhis2 tab.
+-   **`showBackButton`** (boolean, optional, default: false): Whether to show the back button in the header.
+-   **`onBackClick`** (function, optional): Callback executed when clicking the back button. If `showBackButton=true` and `onBackClick` is not provided, the library will fallback to `window.history.back()`.
 -   **`d2LoggerAuditsConfig`** (object, optional): Configuration object to enable D2Logger audits. If not provided, only DHIS2 audits will be displayed. The object should contain:
     -   **`orgUnitId`** (string, required): Organization unit ID for D2Logger audits.
     -   **`programId`** (string, required): Program ID for D2Logger audits.
@@ -193,13 +195,13 @@ function MyComponent() {
             <button onClick={() => setShowAudits(true)}>View Audits</button>
             <Dialog open={showAudits} onClose={() => setShowAudits(false)}>
                 <Audits
-                   title={i18n.t("Notifications")}
-                   baseUrl={"urlExample"}
-                   d2LoggerAuditsConfig={{
-                    orgUnitId: "orgUnitIdExample",
-                    programId: "programIdExample",
-                   }}
-            />
+                    title={i18n.t("Notifications")}
+                    baseUrl={"urlExample"}
+                    d2LoggerAuditsConfig={{
+                        orgUnitId: "orgUnitIdExample",
+                        programId: "programIdExample",
+                    }}
+                />
             </Dialog>
         </>
     );

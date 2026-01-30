@@ -12,6 +12,7 @@ export const Audits: React.FC = React.memo(() => {
             getAllUsers={compositionRoot.users.getAll}
             d2LoggerAuditsConfig={compositionRoot.audits.getD2LoggerAuditsConfig()}
             title={i18n.t("Audit")}
+            hasGutterBottom
         />
     );
 });
