@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Tabs, Tab, Paper } from "@material-ui/core";
 import styled from "styled-components";
-import i18n from "@eyeseetea/feedback-component/locales";
+import i18n from "$/utils/i18n";
 
 export type ViewKey = "dhis2" | "d2logger";
 
@@ -58,5 +58,7 @@ const StyledPaper = styled(Paper)`
 `;
 
 const StyledTab = styled(Tab)`
-    min-width: 50px;
+    && {
+        min-width: 50px;
+    }
 `;
