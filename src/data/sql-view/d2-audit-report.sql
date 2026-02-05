@@ -14,7 +14,7 @@ WITH unioned AS (
             'Category Option Combo: ', COALESCE(coc.name, coc.uid, '')
         ) AS related
     FROM datavalueaudit dva
-    LEFT JOIN _periodstructure ps ON dva.periodid = ps.periodid
+    LEFT JOIN analytics_rs_periodstructure ps ON dva.periodid = ps.periodid
     LEFT JOIN organisationunit ou ON dva.organisationunitid = ou.organisationunitid
     LEFT JOIN dataelement de ON dva.dataelementid = de.dataelementid
     LEFT JOIN datasetelement dse ON de.dataelementid = dva.dataelementid
@@ -41,7 +41,7 @@ WITH unioned AS (
        tedva.value,
        'trackedEntityDataValue' AS datatype,
        CONCAT(
-            'Event: ', COALESCE(psi.uid, ''), E'\n',
+            'Event: ', COALESCE(ev.uid, ''), E'\n',
             'Data Element: ', COALESCE(de2.name, de2.uid, ''), E'\n',
             CASE 
                 WHEN p.type = 'WITH_REGISTRATION' THEN
@@ -54,9 +54,9 @@ WITH unioned AS (
             END
        ) AS related
     FROM trackedentitydatavalueaudit tedva
-    LEFT JOIN programstageinstance psi ON tedva.programstageinstanceid = psi.programstageinstanceid
+    LEFT JOIN event ev ON tedva.eventid = ev.eventid
     LEFT JOIN dataelement de2 ON tedva.dataelementid = de2.dataelementid
-    LEFT JOIN programstage ps2 ON psi.programstageid = ps2.programstageid
+    LEFT JOIN programstage ps2 ON ev.programstageid = ps2.programstageid
     LEFT JOIN program p ON ps2.programid = p.programid
     WHERE tedva.created >= '${startDate}'::date
       AND tedva.created < ('${endDate}'::date + INTERVAL '1 day')
@@ -78,11 +78,11 @@ WITH unioned AS (
        teava.value,
        'trackedEntityAttributeValue' AS datatype,
        CONCAT(
-            'Tracked Entity Instance: ', COALESCE(tei.uid, ''), E'\n',
+            'Tracked Entity: ', COALESCE(tei.uid, ''), E'\n',
             'Attribute: ', COALESCE(tea.name, tea.uid, '')
        ) AS related
     FROM trackedentityattributevalueaudit teava
-    LEFT JOIN trackedentityinstance tei ON teava.trackedentityinstanceid = tei.trackedentityinstanceid
+    LEFT JOIN trackedentity tei ON teava.trackedentityid = tei.trackedentityid
     LEFT JOIN trackedentityattribute tea ON teava.trackedentityattributeid = tea.trackedentityattributeid
     WHERE teava.created >= '${startDate}'::date
       AND teava.created < ('${endDate}'::date + INTERVAL '1 day')
@@ -104,9 +104,9 @@ WITH unioned AS (
        teia.comment AS value,
        'trackedEntityInstance' AS datatype,
        CONCAT(
-            'Tracked Entity Instance: ', COALESCE(teia.trackedentityinstance, '')
+            'Tracked Entity Instance: ', COALESCE(teia.trackedentity, '')
        ) AS related
-    FROM trackedentityinstanceaudit teia
+    FROM trackedentityaudit teia
     WHERE teia.created >= '${startDate}'::date
       AND teia.created < ('${endDate}'::date + INTERVAL '1 day')
       AND (
@@ -118,10 +118,8 @@ WITH unioned AS (
         '${dataType}' = 'trackedEntityInstance'
       )
 )
-
 SELECT *
 FROM unioned
 ORDER BY created DESC
 LIMIT ${pageSize}
 OFFSET ${offset}
-
