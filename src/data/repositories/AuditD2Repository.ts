@@ -3,7 +3,6 @@ import { D2Api } from "$/types/d2-api";
 import { FutureData } from "$/data/api-futures";
 import { Future } from "$/domain/entities/generic/Future";
 import { Audit } from "$/domain/entities/Audit";
-import { AuditType } from "@eyeseetea/d2-api/api/audit";
 import { generateUid } from "$/utils/uid";
 import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
 import { ensureSQLView } from "$/data/utils/ensureSQLView";
@@ -72,7 +71,7 @@ export class AuditD2Repository implements AuditRepository {
                 id: generateUid(),
                 created: getValue("created"),
                 modifiedBy: getValue("modifiedby") || undefined,
-                auditType: getValue("audittype") as AuditType,
+                auditType: getValue("audittype"),
                 value: getValue("value") || undefined,
                 dataType: getValue("datatype"),
                 related: getValue("related") || undefined,
