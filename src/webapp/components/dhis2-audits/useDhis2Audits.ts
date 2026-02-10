@@ -8,7 +8,11 @@ import { tableConfig } from "$/webapp/components/dhis2-audits/tableConfig";
 import { User } from "$/domain/entities/User";
 import { Maybe } from "$/utils/ts-utils";
 
-export function useDhis2Audits(getAudits: GetAuditsUseCase, getAllUsers: GetAllUsersUseCase) {
+export function useDhis2Audits(
+    getAudits: GetAuditsUseCase,
+    getAllUsers: GetAllUsersUseCase,
+    excludedProgramId: Maybe<string>
+) {
     const [error, setError] = useState<Maybe<string>>();
     const [users, setUsers] = useState<User[]>([]);
 
@@ -36,6 +40,7 @@ export function useDhis2Audits(getAudits: GetAuditsUseCase, getAllUsers: GetAllU
                         endDate: formatDate(endDate),
                         username: selectedUsername || undefined,
                         dataType: selectedDataType,
+                        excludedProgramId: excludedProgramId,
                     })
                     .run(
                         response => {
@@ -48,7 +53,7 @@ export function useDhis2Audits(getAudits: GetAuditsUseCase, getAllUsers: GetAllU
                     );
             });
         },
-        [getAudits, startDate, endDate, selectedUsername, selectedDataType]
+        [getAudits, startDate, endDate, selectedUsername, selectedDataType, excludedProgramId]
     );
 
     const onStartDateChange = useCallback((date: Date | null) => {

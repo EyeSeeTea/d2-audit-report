@@ -68,6 +68,10 @@ WITH unioned AS (
         '${dataType}' = 'ALL' OR 
         '${dataType}' = 'trackedEntityDataValue'
       )
+      AND (
+        '${excludedProgramId}' = '' OR
+        p.uid != '${excludedProgramId}'
+      )
 
     UNION ALL
 
@@ -94,6 +98,16 @@ WITH unioned AS (
         '${dataType}' = 'ALL' OR 
         '${dataType}' = 'trackedEntityAttributeValue'
       )
+      AND (
+        '${excludedProgramId}' = '' OR
+        NOT EXISTS (
+            SELECT 1
+            FROM programinstance pi
+            JOIN program p2 ON p2.programid = pi.programid
+            WHERE pi.trackedentityinstanceid = teava.trackedentityinstanceid
+              AND p2.uid = '${excludedProgramId}'
+        )
+      )
 
     UNION ALL
 
@@ -116,6 +130,17 @@ WITH unioned AS (
       AND (
         '${dataType}' = 'ALL' OR 
         '${dataType}' = 'trackedEntityInstance'
+      )
+      AND (
+        '${excludedProgramId}' = '' OR
+        NOT EXISTS (
+            SELECT 1
+            FROM trackedentityinstance tei_audit
+            JOIN programinstance pi ON pi.trackedentityinstanceid = tei_audit.trackedentityinstanceid
+            JOIN program p2 ON p2.programid = pi.programid
+            WHERE tei_audit.uid = teia.trackedentityinstance
+              AND p2.uid = '${excludedProgramId}'
+        )
       )
 )
 

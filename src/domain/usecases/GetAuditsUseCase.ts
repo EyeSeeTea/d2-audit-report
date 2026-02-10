@@ -10,6 +10,7 @@ export type AuditsFilters = {
     dataType?: string;
     page: number;
     pageSize: number;
+    excludedProgramId?: string;
 };
 
 export class GetAuditsUseCase {

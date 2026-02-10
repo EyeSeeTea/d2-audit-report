@@ -51,7 +51,11 @@ export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
 
                 <Container>
                     {currentViewKey === "dhis2" ? (
-                        <Dhis2Audits getAudits={getAudits} getAllUsers={getAllUsers} />
+                        <Dhis2Audits
+                            getAudits={getAudits}
+                            getAllUsers={getAllUsers}
+                            excludedProgramId={d2LoggerAuditsConfig.programId}
+                        />
                     ) : (
                         <D2LoggerAudits
                             baseUrl={d2LoggerAuditsConfig.baseUrl}
@@ -72,7 +76,11 @@ export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
                     hasD2LoggerAudits={false}
                     hasGutterBottom={hasGutterBottom}
                 />
-                <Dhis2Audits getAudits={getAudits} getAllUsers={getAllUsers} />
+                <Dhis2Audits
+                    getAudits={getAudits}
+                    getAllUsers={getAllUsers}
+                    excludedProgramId={undefined}
+                />
             </>
         );
     }
