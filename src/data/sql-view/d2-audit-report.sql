@@ -119,7 +119,13 @@ WITH unioned AS (
       )
 )
 
-SELECT *
+SELECT
+    to_char(created, 'YYYY-MM-DD HH24:MI:SS') AS created,
+    modifiedby,
+    audittype,
+    value,
+    datatype,
+    related
 FROM unioned
 ORDER BY created DESC
 LIMIT ${pageSize}
