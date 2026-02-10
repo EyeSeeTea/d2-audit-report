@@ -59,11 +59,11 @@ export class AuditD2Repository implements AuditRepository {
             return new Audit({
                 id: generateUid(),
                 created: getValue("created"),
-                modifiedBy: getValue("modifiedby") || undefined,
+                modifiedBy: getValue("modifiedby"),
                 auditType: getValue("audittype"),
-                value: getValue("value") || undefined,
+                value: getValue("value"),
                 dataType: getValue("datatype"),
-                related: getValue("related") || undefined,
+                related: getValue("related"),
             });
         });
     }
