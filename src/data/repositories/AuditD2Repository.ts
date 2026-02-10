@@ -43,21 +43,10 @@ export class AuditD2Repository implements AuditRepository {
                 })
                 .map(response => {
                     const objects = this.mapSqlViewResponseToAudits(response);
-                    const pager = response.pager || {
-                        page: filters.page,
-                        pageSize: filters.pageSize,
-                        total: objects.length,
-                        pageCount: 1,
-                    };
 
                     return {
                         objects,
-                        pager: {
-                            page: pager.page,
-                            pageSize: pager.pageSize,
-                            total: pager.total,
-                            pageCount: pager.pageCount,
-                        },
+                        pager: response.pager,
                     };
                 });
         });
