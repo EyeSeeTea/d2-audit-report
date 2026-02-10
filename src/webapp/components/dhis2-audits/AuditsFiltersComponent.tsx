@@ -4,7 +4,7 @@ import i18n from "$/utils/i18n";
 import { DatePicker } from "@eyeseetea/d2-ui-components";
 import { Moment } from "moment";
 import { TextField } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import { User } from "$/domain/entities/User";
 import { Dropdown } from "$/webapp/components/dropdown/Dropdown";
 import { DropdownItem } from "$/webapp/components/dropdown/GenericDropdown";
@@ -111,7 +111,7 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
                     onInputChange={handleInputChange}
                     onChange={handleUsernameChange}
                     style={{ width: 300 }}
-                    renderInput={(params: any) => {
+                    renderInput={(params: AutocompleteRenderInputParams) => {
                         return <TextField {...params} label={i18n.t("User")} variant="standard" />;
                     }}
                 />
