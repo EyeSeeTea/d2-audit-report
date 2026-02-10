@@ -10,9 +10,10 @@ import { ensureSQLView } from "$/data/utils/ensureSQLView";
 import { Dhis2SqlViews, SqlViewGetData } from "$/data/sql-view/Dhis2SqlViews";
 import { AuditsFilters } from "$/domain/usecases/GetAuditsUseCase";
 import { encodeUsername } from "$/data/utils/usernameEncoder";
+import { Maybe } from "$/utils/ts-utils";
 
 export class AuditD2Repository implements AuditRepository {
-    private sqlViewId: string | null = null;
+    private sqlViewId: Maybe<string> = undefined;
 
     constructor(private api: D2Api) {}
 

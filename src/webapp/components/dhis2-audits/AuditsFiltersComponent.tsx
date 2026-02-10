@@ -8,17 +8,18 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { User } from "$/domain/entities/User";
 import { Dropdown } from "$/webapp/components/dropdown/Dropdown";
 import { DropdownItem } from "$/webapp/components/dropdown/GenericDropdown";
+import { Maybe } from "$/utils/ts-utils";
 
 interface AuditsFiltersComponentProps {
     startDate: Date | null | undefined;
     endDate: Date | null | undefined;
     users: User[];
-    selectedUsername: string | null;
-    selectedDataType: string | undefined;
+    selectedUsername: Maybe<string>;
+    selectedDataType: Maybe<string>;
     onStartDateChange: (date: Date | null) => void;
     onEndDateChange: (date: Date | null) => void;
-    onUsernameChange: (username: string | null) => void;
-    onDataTypeChange: (dataType: string | undefined) => void;
+    onUsernameChange: (username: Maybe<string>) => void;
+    onDataTypeChange: (dataType: Maybe<string>) => void;
 }
 
 const dataTypeOptions: DropdownItem[] = [
@@ -64,7 +65,7 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
 
     const handleUsernameChange = React.useCallback(
         (_event: React.ChangeEvent<{}>, value: User | null) => {
-            onUsernameChange(value?.username || null);
+            onUsernameChange(value?.username || undefined);
         },
         [onUsernameChange]
     );
