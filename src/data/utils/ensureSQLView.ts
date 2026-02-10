@@ -1,10 +1,8 @@
 import { D2Api } from "$/types/d2-api";
 import { FutureData, apiToFuture } from "$/data/api-futures";
 import sqlQuery from "$/data/sql-view/d2-audit-report.sql?raw";
-//import sqlQuery from "$/data/sql-view/d2-audit-report-materialized.sql?raw";
 
 const SQL_VIEW_NAME = "d2-audit-report";
-//const SQL_VIEW_NAME = "d2-audit-report-materialized";
 
 export function ensureSQLView(api: D2Api): FutureData<string> {
     return apiToFuture(
@@ -19,7 +17,6 @@ export function ensureSQLView(api: D2Api): FutureData<string> {
             return createSqlView(api);
         } else {
             return updateSqlView(api, existingView.id);
-            //return Future.success(existingView.id);
         }
     });
 }
