@@ -31,6 +31,10 @@ WITH unioned AS (
         '${dataType}' = 'ALL' OR 
         '${dataType}' = 'dataValue'
       )
+      AND (
+        '${excludedUser}' = 'ANY' OR
+        MD5(dva.modifiedby) != '${excludedUser}'
+      )
 
     UNION ALL
 
@@ -69,8 +73,12 @@ WITH unioned AS (
         '${dataType}' = 'trackedEntityDataValue'
       )
       AND (
-        '${excludedProgramId}' = '' OR
+        '${excludedProgramId}' = 'ANY' OR
         p.uid != '${excludedProgramId}'
+      )
+      AND (
+        '${excludedUser}' = 'ANY' OR
+        MD5(tedva.modifiedby) != '${excludedUser}'
       )
 
     UNION ALL
@@ -99,7 +107,7 @@ WITH unioned AS (
         '${dataType}' = 'trackedEntityAttributeValue'
       )
       AND (
-        '${excludedProgramId}' = '' OR
+        '${excludedProgramId}' = 'ANY' OR
         NOT EXISTS (
             SELECT 1
             FROM programinstance pi
@@ -107,6 +115,10 @@ WITH unioned AS (
             WHERE pi.trackedentityinstanceid = teava.trackedentityinstanceid
               AND p2.uid = '${excludedProgramId}'
         )
+      )
+      AND (
+        '${excludedUser}' = 'ANY' OR
+        MD5(teava.modifiedby) != '${excludedUser}'
       )
 
     UNION ALL
@@ -132,7 +144,11 @@ WITH unioned AS (
         '${dataType}' = 'trackedEntityInstance'
       )
       AND (
-        '${excludedProgramId}' = '' OR
+        '${excludedUser}' = 'ANY' OR
+        MD5(teia.accessedby) != '${excludedUser}'
+      )
+      AND (
+        '${excludedProgramId}' = 'ANY' OR
         NOT EXISTS (
             SELECT 1
             FROM trackedentityinstance tei_audit

@@ -20,6 +20,7 @@ export function useDhis2Audits(
     const [endDate, setEndDate] = useState<Date | null>(new Date());
     const [selectedUsername, setSelectedUsername] = useState<Maybe<string>>();
     const [selectedDataType, setSelectedDataType] = useState<Maybe<string>>();
+    const [excludeScriptLogs, setExcludeScriptLogs] = useState(false);
 
     const getRows = useCallback(
         async (_search: string, paging: TablePagination, _sorting: TableSorting<Audit>) => {
@@ -41,6 +42,7 @@ export function useDhis2Audits(
                         username: selectedUsername || undefined,
                         dataType: selectedDataType,
                         excludedProgramId: excludedProgramId,
+                        excludeScriptLogs: excludeScriptLogs,
                     })
                     .run(
                         response => {
@@ -53,7 +55,15 @@ export function useDhis2Audits(
                     );
             });
         },
-        [getAudits, startDate, endDate, selectedUsername, selectedDataType, excludedProgramId]
+        [
+            getAudits,
+            startDate,
+            endDate,
+            selectedUsername,
+            selectedDataType,
+            excludedProgramId,
+            excludeScriptLogs,
+        ]
     );
 
     const onStartDateChange = useCallback((date: Date | null) => {
@@ -70,6 +80,10 @@ export function useDhis2Audits(
 
     const onDataTypeChange = useCallback((dataType: Maybe<string>) => {
         setSelectedDataType(dataType);
+    }, []);
+
+    const onExcludeScriptLogsChange = useCallback((value: boolean) => {
+        setExcludeScriptLogs(value);
     }, []);
 
     useEffect(() => {
@@ -90,11 +104,13 @@ export function useDhis2Audits(
         endDate,
         selectedUsername,
         selectedDataType,
+        excludeScriptLogs,
         users,
         onStartDateChange,
         onEndDateChange,
         onUsernameChange,
         onDataTypeChange,
+        onExcludeScriptLogsChange,
     };
 }
 

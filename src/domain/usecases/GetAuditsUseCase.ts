@@ -11,6 +11,7 @@ export type AuditsFilters = {
     page: number;
     pageSize: number;
     excludedProgramId?: string;
+    excludeScriptLogs?: boolean;
 };
 
 export class GetAuditsUseCase {

@@ -24,11 +24,13 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
             endDate,
             selectedUsername,
             selectedDataType,
+            excludeScriptLogs,
             users,
             onStartDateChange,
             onEndDateChange,
             onUsernameChange,
             onDataTypeChange,
+            onExcludeScriptLogsChange,
         } = useDhis2Audits(getAudits, getAllUsers, excludedProgramId);
 
         const containerRef = usePaginationTextModifier(
@@ -50,10 +52,12 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
                     users={users}
                     selectedUsername={selectedUsername}
                     selectedDataType={selectedDataType}
+                    excludeScriptLogs={excludeScriptLogs}
                     onStartDateChange={onStartDateChange}
                     onEndDateChange={onEndDateChange}
                     onUsernameChange={onUsernameChange}
                     onDataTypeChange={onDataTypeChange}
+                    onExcludeScriptLogsChange={onExcludeScriptLogsChange}
                 />
             ),
             [
@@ -62,10 +66,12 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
                 users,
                 selectedUsername,
                 selectedDataType,
+                excludeScriptLogs,
                 onStartDateChange,
                 onEndDateChange,
                 onUsernameChange,
                 onDataTypeChange,
+                onExcludeScriptLogsChange,
             ]
         );
 

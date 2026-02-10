@@ -3,7 +3,7 @@ import styled from "styled-components";
 import i18n from "$/utils/i18n";
 import { DatePicker } from "@eyeseetea/d2-ui-components";
 import { Moment } from "moment";
-import { TextField } from "@material-ui/core";
+import { Checkbox, FormControlLabel, TextField } from "@material-ui/core";
 import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import { User } from "$/domain/entities/User";
 import { Dropdown } from "$/webapp/components/dropdown/Dropdown";
@@ -16,10 +16,12 @@ interface AuditsFiltersComponentProps {
     users: User[];
     selectedUsername: Maybe<string>;
     selectedDataType: Maybe<string>;
+    excludeScriptLogs: boolean;
     onStartDateChange: (date: Date | null) => void;
     onEndDateChange: (date: Date | null) => void;
     onUsernameChange: (username: Maybe<string>) => void;
     onDataTypeChange: (dataType: Maybe<string>) => void;
+    onExcludeScriptLogsChange: (value: boolean) => void;
 }
 
 const dataTypeOptions: DropdownItem[] = [
@@ -35,10 +37,12 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
     users,
     selectedUsername,
     selectedDataType,
+    excludeScriptLogs,
     onStartDateChange,
     onEndDateChange,
     onUsernameChange,
     onDataTypeChange,
+    onExcludeScriptLogsChange,
 }) => {
     const handleStartDateChange = React.useCallback(
         (dateM: Moment | null) => {
@@ -116,6 +120,18 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
                     }}
                 />
             </AutocompleteContainer>
+            <CheckboxContainer>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={excludeScriptLogs}
+                            onChange={e => onExcludeScriptLogsChange(Boolean(e.target.checked))}
+                            color="primary"
+                        />
+                    }
+                    label={i18n.t("Exclude script logs")}
+                />
+            </CheckboxContainer>
         </PickersContainer>
     );
 };
@@ -177,4 +193,11 @@ const AutocompleteContainer = styled.div`
 
 const DropdownContainer = styled.div`
     margin-top: 14px;
+`;
+
+const CheckboxContainer = styled.div`
+    margin-top: 18px;
+    margin-left: 16px;
+    display: flex;
+    align-items: center;
 `;
