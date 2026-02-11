@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2026-01-29T14:47:10.811Z\n"
-"PO-Revision-Date: 2026-01-29T14:47:10.812Z\n"
+"POT-Creation-Date: 2026-02-11T06:12:52.427Z\n"
+"PO-Revision-Date: 2026-02-11T06:12:52.428Z\n"
 
 msgid "D2Logger"
 msgstr ""
@@ -27,6 +27,9 @@ msgid "Data Type"
 msgstr ""
 
 msgid "User"
+msgstr ""
+
+msgid "Exclude script logs"
 msgstr ""
 
 msgid "Date"
