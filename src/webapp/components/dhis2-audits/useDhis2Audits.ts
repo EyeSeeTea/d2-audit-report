@@ -20,7 +20,7 @@ export function useDhis2Audits(
     const [endDate, setEndDate] = useState<Date | null>(new Date());
     const [selectedUsername, setSelectedUsername] = useState<Maybe<string>>();
     const [selectedDataType, setSelectedDataType] = useState<Maybe<string>>();
-    const [excludeScriptLogs, setExcludeScriptLogs] = useState(false);
+    const [excludeScriptLogs, setExcludeScriptLogs] = useState(true);
 
     const getRows = useCallback(
         async (_search: string, paging: TablePagination, _sorting: TableSorting<Audit>) => {
