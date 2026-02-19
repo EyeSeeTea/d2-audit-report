@@ -35,6 +35,13 @@ WITH unioned AS (
         '${excludedUser}' = 'ANY' OR
         MD5(dva.modifiedby) != '${excludedUser}'
       )
+      AND (
+        '${orgUnitIds}' = 'ALL' OR
+        (ou.path IS NOT NULL AND EXISTS (
+            SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
+            WHERE ou.path LIKE '%/' || trim(t.uid) || '/%' OR ou.path LIKE '%/' || trim(t.uid)
+        ))
+      )
 
     UNION ALL
 
@@ -59,6 +66,7 @@ WITH unioned AS (
        ) AS related
     FROM trackedentitydatavalueaudit tedva
     LEFT JOIN programstageinstance psi ON tedva.programstageinstanceid = psi.programstageinstanceid
+    LEFT JOIN organisationunit ou_psi ON psi.organisationunitid = ou_psi.organisationunitid
     LEFT JOIN dataelement de2 ON tedva.dataelementid = de2.dataelementid
     LEFT JOIN programstage ps2 ON psi.programstageid = ps2.programstageid
     LEFT JOIN program p ON ps2.programid = p.programid
@@ -80,6 +88,13 @@ WITH unioned AS (
         '${excludedUser}' = 'ANY' OR
         MD5(tedva.modifiedby) != '${excludedUser}'
       )
+      AND (
+        '${orgUnitIds}' = 'ALL' OR
+        (ou_psi.path IS NOT NULL AND EXISTS (
+            SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
+            WHERE ou_psi.path LIKE '%/' || trim(t.uid) || '/%' OR ou_psi.path LIKE '%/' || trim(t.uid)
+        ))
+      )
 
     UNION ALL
 
@@ -95,6 +110,7 @@ WITH unioned AS (
        ) AS related
     FROM trackedentityattributevalueaudit teava
     LEFT JOIN trackedentityinstance tei ON teava.trackedentityinstanceid = tei.trackedentityinstanceid
+    LEFT JOIN organisationunit ou_tei ON tei.organisationunitid = ou_tei.organisationunitid
     LEFT JOIN trackedentityattribute tea ON teava.trackedentityattributeid = tea.trackedentityattributeid
     WHERE teava.created >= '${startDate}'::date
       AND teava.created < ('${endDate}'::date + INTERVAL '1 day')
@@ -120,6 +136,13 @@ WITH unioned AS (
         '${excludedUser}' = 'ANY' OR
         MD5(teava.modifiedby) != '${excludedUser}'
       )
+      AND (
+        '${orgUnitIds}' = 'ALL' OR
+        (ou_tei.path IS NOT NULL AND EXISTS (
+            SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
+            WHERE ou_tei.path LIKE '%/' || trim(t.uid) || '/%' OR ou_tei.path LIKE '%/' || trim(t.uid)
+        ))
+      )
 
     UNION ALL
 
@@ -133,6 +156,8 @@ WITH unioned AS (
             'Tracked Entity Instance: ', COALESCE(teia.trackedentityinstance, '')
        ) AS related
     FROM trackedentityinstanceaudit teia
+    LEFT JOIN trackedentityinstance tei_ou ON tei_ou.uid = teia.trackedentityinstance
+    LEFT JOIN organisationunit ou_teia ON tei_ou.organisationunitid = ou_teia.organisationunitid
     WHERE teia.created >= '${startDate}'::date
       AND teia.created < ('${endDate}'::date + INTERVAL '1 day')
       AND (
@@ -158,6 +183,13 @@ WITH unioned AS (
               AND p2.uid = '${excludedProgramId}'
         )
       )
+      AND (
+        '${orgUnitIds}' = 'ALL' OR
+        (ou_teia.path IS NOT NULL AND EXISTS (
+            SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
+            WHERE ou_teia.path LIKE '%/' || trim(t.uid) || '/%' OR ou_teia.path LIKE '%/' || trim(t.uid)
+        ))
+      )
 )
 
 SELECT
@@ -171,4 +203,3 @@ FROM unioned
 ORDER BY created DESC
 LIMIT ${pageSize}
 OFFSET ${offset}
-

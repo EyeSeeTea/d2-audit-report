@@ -9,24 +9,21 @@ export class UserD2Repository implements UserRepository {
     public getCurrent(): FutureData<User> {
         return apiToFuture(
             this.api.currentUser.get({
-                fields: userFields,
+                fields: userFieldsWithOrgUnits,
             })
-        ).map(d2User => {
-            const res = this.buildUser(d2User);
-            return res;
-        });
+        ).map(d2User => this.buildUser(d2User));
     }
 
     public getAll(): FutureData<User[]> {
         return apiToFuture(
             this.api.models.users.get({
-                fields: userFields,
+                fields: userFieldsBase,
                 paging: false,
                 order: "displayName:asc",
             })
-        ).map(response => {
-            return response.objects.map(d2User => this.buildUser(d2User));
-        });
+        ).map(response =>
+            response.objects.map(d2User => this.buildUser({ ...d2User, organisationUnits: [] }))
+        );
     }
 
     private buildUser(d2User: D2User) {
@@ -34,12 +31,13 @@ export class UserD2Repository implements UserRepository {
             id: d2User.id,
             name: d2User.displayName,
             userGroups: d2User.userGroups,
+            orgUnits: d2User.organisationUnits || [],
             ...d2User.userCredentials,
         });
     }
 }
 
-const userFields = {
+const userFieldsBase = {
     id: true,
     displayName: true,
     userGroups: { id: true, name: true },
@@ -49,4 +47,9 @@ const userFields = {
     },
 } as const;
 
-type D2User = MetadataPick<{ users: { fields: typeof userFields } }>["users"][number];
+const userFieldsWithOrgUnits = {
+    ...userFieldsBase,
+    organisationUnits: { id: true, name: true },
+} as const;
+
+type D2User = MetadataPick<{ users: { fields: typeof userFieldsWithOrgUnits } }>["users"][number];

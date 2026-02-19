@@ -34,7 +34,10 @@ export function getWebappCompositionRoot(api: D2Api) {
             getAll: new GetAllUsersUseCase(repositories),
         },
         audits: {
-            getAll: new GetAuditsUseCase(repositories.auditRepository),
+            getAll: new GetAuditsUseCase(
+                repositories.auditRepository,
+                repositories.userRepository
+            ),
             getD2LoggerAuditsConfig: (): Maybe<D2LoggerAuditsConfig> => {
                 return orgUnitId && programId
                     ? { baseUrl: api.baseUrl, orgUnitId, programId }

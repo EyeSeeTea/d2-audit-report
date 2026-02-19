@@ -40,6 +40,8 @@ export class AuditD2Repository implements AuditRepository {
                 excludedUser: filters.excludeScriptLogs
                     ? encodeUsername(SCRIPT_LOGS_USERNAME)
                     : "ANY",
+                orgUnitIds:
+                    filters.orgUnitIds?.length ? filters.orgUnitIds.join("_") : "ALL",
             };
 
             return new Dhis2SqlViews(this.api)
