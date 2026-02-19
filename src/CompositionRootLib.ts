@@ -29,10 +29,7 @@ export function getLibCompositionRoot(baseUrl: string) {
             getAll: new GetAllUsersUseCase({ userRepository: repositories.userRepository }),
         },
         audits: {
-            getAll: new GetAuditsUseCase(
-                repositories.auditRepository,
-                repositories.userRepository
-            ),
+            getAll: new GetAuditsUseCase(repositories.auditRepository, repositories.userRepository),
         },
     };
 }

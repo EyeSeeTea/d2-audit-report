@@ -18,17 +18,12 @@ export type AuditsFilters = {
 };
 
 export class GetAuditsUseCase {
-    constructor(
-        private auditRepository: AuditRepository,
-        private userRepository: UserRepository
-    ) {}
+    constructor(private auditRepository: AuditRepository, private userRepository: UserRepository) {}
 
     public execute(filters: AuditsFilters): FutureData<PaginatedResponse<Audit>> {
         return this.userRepository.getCurrent().flatMap(currentUser => {
             const orgUnitIds =
-                currentUser.orgUnits.length > 0
-                    ? currentUser.orgUnits.map(ou => ou.id)
-                    : undefined;
+                currentUser.orgUnits.length > 0 ? currentUser.orgUnits.map(ou => ou.id) : undefined;
             return this.auditRepository.getAll({
                 ...filters,
                 orgUnitIds,
