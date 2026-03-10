@@ -6,22 +6,32 @@ WITH unioned AS (
         dva.value,
         'dataValue' AS datatype,
         CONCAT(
-            'Period: ', COALESCE(ps.iso, ''), E'\n',
+            'Start date: ', COALESCE(to_char(p.startdate, 'YYYY-MM-DD'), ''), E'\n',
+            'End date: ', COALESCE(to_char(p.enddate, 'YYYY-MM-DD'), ''), E'\n',
             'Organisation Unit: ', COALESCE(ou.name, ou.uid, ''), E'\n',
             'Data Element: ', COALESCE(de.name, de.uid, ''), E'\n',
-            'Data Set: ', COALESCE(ds.name, ds.uid, ''), E'\n',
             'Attribute Option Combo: ', COALESCE(aoc.name, aoc.uid, ''), E'\n',
-            'Category Option Combo: ', COALESCE(coc.name, coc.uid, '')
+            'Category Option Combo: ', COALESCE(coc.name, coc.uid, ''), E'\n',
+            'Datasets: ', COALESCE(datasets.dataset_names, '')
         ) AS related
     FROM datavalueaudit dva
-    LEFT JOIN _periodstructure ps ON dva.periodid = ps.periodid
+    LEFT JOIN period p ON dva.periodid = p.periodid
     LEFT JOIN organisationunit ou ON dva.organisationunitid = ou.organisationunitid
     LEFT JOIN dataelement de ON dva.dataelementid = de.dataelementid
-    LEFT JOIN datasetelement dse ON de.dataelementid = dva.dataelementid
-    LEFT JOIN dataset ds ON dse.datasetid = ds.datasetid
     LEFT JOIN categoryoptioncombo aoc ON dva.attributeoptioncomboid = aoc.categoryoptioncomboid
     LEFT JOIN categoryoptioncombo coc ON dva.categoryoptioncomboid = coc.categoryoptioncomboid
-    WHERE dva.created >= '${startDate}'::date
+    LEFT JOIN (
+    SELECT 
+        de.dataelementid,
+        STRING_AGG(
+            DISTINCT COALESCE(ds.name, ds.uid),
+            ', ' ORDER BY COALESCE(ds.name, ds.uid)
+        ) AS dataset_names
+    FROM datasetelement de
+    JOIN dataset ds ON de.datasetid = ds.datasetid
+    GROUP BY de.dataelementid
+) datasets ON dva.dataelementid = datasets.dataelementid
+     WHERE dva.created >= '${startDate}'::date
       AND dva.created < ('${endDate}'::date + INTERVAL '1 day')
       AND (
         '${username}' = 'ALL' OR 
