@@ -1,10 +1,13 @@
 import { UserRepository } from "$/domain/repositories/UserRepository";
 import { AuditD2Repository } from "./data/repositories/AuditD2Repository";
 import { UserD2Repository } from "./data/repositories/UserD2Repository";
+import { OrgUnitD2Repository } from "./data/repositories/OrgUnitD2Repository";
 import { AuditRepository } from "./domain/repositories/AuditRepository";
+import { OrgUnitRepository } from "./domain/repositories/OrgUnitRepository";
 import { GetAuditsUseCase } from "./domain/usecases/GetAuditsUseCase";
 import { GetCurrentUserUseCase } from "./domain/usecases/GetCurrentUserUseCase";
 import { GetAllUsersUseCase } from "./domain/usecases/GetAllUsersUseCase";
+import { GetOrgUnitsUseCase } from "./domain/usecases/GetOrgUnitsUseCase";
 import { D2Api } from "./types/d2-api";
 import { Maybe } from "$/utils/ts-utils";
 import { D2LoggerAuditsConfig } from "$/types/D2LoggerAuditsConfig";
@@ -14,6 +17,7 @@ export type CompositionRoot = ReturnType<typeof getWebappCompositionRoot>;
 type Repositories = {
     userRepository: UserRepository;
     auditRepository: AuditRepository;
+    orgUnitRepository: OrgUnitRepository;
 };
 
 /**
@@ -30,8 +34,8 @@ export function getWebappCompositionRoot(api: D2Api) {
 
     return {
         users: {
-            getCurrent: new GetCurrentUserUseCase(repositories),
-            getAll: new GetAllUsersUseCase(repositories),
+            getCurrent: new GetCurrentUserUseCase(repositories.userRepository),
+            getAll: new GetAllUsersUseCase(repositories.userRepository),
         },
         audits: {
             getAll: new GetAuditsUseCase(repositories.auditRepository, repositories.userRepository),
@@ -41,6 +45,12 @@ export function getWebappCompositionRoot(api: D2Api) {
                     : undefined;
             },
         },
+        orgUnits: {
+            get: new GetOrgUnitsUseCase(
+                repositories.orgUnitRepository,
+                repositories.userRepository
+            ),
+        },
     };
 }
 
@@ -48,5 +58,6 @@ function getRepositories(api: D2Api): Repositories {
     return {
         userRepository: new UserD2Repository(api),
         auditRepository: new AuditD2Repository(api),
+        orgUnitRepository: new OrgUnitD2Repository(api),
     };
 }

@@ -41,6 +41,7 @@ export class AuditD2Repository implements AuditRepository {
                     ? encodeUsername(SCRIPT_LOGS_USERNAME)
                     : "ANY",
                 orgUnitIds: filters.orgUnitIds?.length ? filters.orgUnitIds.join("_") : "ALL",
+                includeDescendants: filters.includeOrgUnitDescendants === false ? "false" : "true",
             };
 
             return new Dhis2SqlViews(this.api)

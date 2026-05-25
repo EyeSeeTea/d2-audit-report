@@ -3,7 +3,10 @@ import { UserRepository } from "$/domain/repositories/UserRepository";
 import { GetAllUsersUseCase } from "$/domain/usecases/GetAllUsersUseCase";
 import { AuditD2Repository } from "./data/repositories/AuditD2Repository";
 import { AuditRepository } from "./domain/repositories/AuditRepository";
+import { OrgUnitD2Repository } from "./data/repositories/OrgUnitD2Repository";
+import { OrgUnitRepository } from "./domain/repositories/OrgUnitRepository";
 import { GetAuditsUseCase } from "./domain/usecases/GetAuditsUseCase";
+import { GetOrgUnitsUseCase } from "./domain/usecases/GetOrgUnitsUseCase";
 import { D2Api } from "./types/d2-api";
 
 export type CompositionRootLib = ReturnType<typeof getLibCompositionRoot>;
@@ -11,6 +14,7 @@ export type CompositionRootLib = ReturnType<typeof getLibCompositionRoot>;
 type Repositories = {
     userRepository: UserRepository;
     auditRepository: AuditRepository;
+    orgUnitRepository: OrgUnitRepository;
 };
 
 /**
@@ -26,10 +30,16 @@ export function getLibCompositionRoot(baseUrl: string) {
 
     return {
         users: {
-            getAll: new GetAllUsersUseCase({ userRepository: repositories.userRepository }),
+            getAll: new GetAllUsersUseCase(repositories.userRepository),
         },
         audits: {
             getAll: new GetAuditsUseCase(repositories.auditRepository, repositories.userRepository),
+        },
+        orgUnits: {
+            search: new GetOrgUnitsUseCase(
+                repositories.orgUnitRepository,
+                repositories.userRepository
+            ),
         },
     };
 }
@@ -38,5 +48,6 @@ function getRepositories(api: D2Api): Repositories {
     return {
         userRepository: new UserD2Repository(api),
         auditRepository: new AuditD2Repository(api),
+        orgUnitRepository: new OrgUnitD2Repository(api),
     };
 }

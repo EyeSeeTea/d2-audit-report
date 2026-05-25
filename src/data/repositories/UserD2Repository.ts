@@ -2,16 +2,21 @@ import { User } from "$/domain/entities/User";
 import { UserRepository } from "$/domain/repositories/UserRepository";
 import { D2Api, MetadataPick } from "$/types/d2-api";
 import { apiToFuture, FutureData } from "$/data/api-futures";
+import { InmemoryCache } from "$/data/common/InmemoryCache";
 
 export class UserD2Repository implements UserRepository {
+    private cache = new InmemoryCache();
+
     constructor(private api: D2Api) {}
 
     public getCurrent(): FutureData<User> {
-        return apiToFuture(
-            this.api.currentUser.get({
-                fields: userFieldsWithOrgUnits,
-            })
-        ).map(d2User => this.buildUser(d2User));
+        return this.cache.getOrFuture("currentUser", () =>
+            apiToFuture(
+                this.api.currentUser.get({
+                    fields: userFieldsWithOrgUnits,
+                })
+            ).map(d2User => this.buildUser(d2User))
+        );
     }
 
     public getAll(): FutureData<User[]> {

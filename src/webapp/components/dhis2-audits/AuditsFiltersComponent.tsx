@@ -3,9 +3,10 @@ import styled from "styled-components";
 import i18n from "$/utils/i18n";
 import { DatePicker } from "@eyeseetea/d2-ui-components";
 import { Moment } from "moment";
-import { Checkbox, FormControlLabel, TextField } from "@material-ui/core";
+import { Checkbox, CircularProgress, FormControlLabel, TextField } from "@material-ui/core";
 import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import { User } from "$/domain/entities/User";
+import { OrgUnit } from "$/domain/entities/OrgUnit";
 import { Dropdown } from "$/webapp/components/dropdown/Dropdown";
 import { DropdownItem } from "$/webapp/components/dropdown/GenericDropdown";
 import { Maybe } from "$/utils/ts-utils";
@@ -14,15 +15,25 @@ interface AuditsFiltersComponentProps {
     startDate: Date | null | undefined;
     endDate: Date | null | undefined;
     users: User[];
+    orgUnits: OrgUnit[];
+    isLoadingOrgUnits: boolean;
     selectedUsername: Maybe<string>;
     selectedDataType: Maybe<string>;
+    selectedOrgUnit: OrgUnit | null;
+    includeOrgUnitDescendants: boolean;
     excludeScriptLogs: boolean;
     onStartDateChange: (date: Date | null) => void;
     onEndDateChange: (date: Date | null) => void;
     onUsernameChange: (username: Maybe<string>) => void;
     onDataTypeChange: (dataType: Maybe<string>) => void;
     onExcludeScriptLogsChange: (value: boolean) => void;
+    onOrgUnitChange: (orgUnit: OrgUnit | null) => void;
+    onOrgUnitSearch: (query: string) => void;
+    onOrgUnitsScrollEnd: () => void;
+    onIncludeOrgUnitDescendantsChange: (value: boolean) => void;
 }
+
+const LOADING_SENTINEL: OrgUnit = { id: "__loading__", name: "" };
 
 const dataTypeOptions: DropdownItem[] = [
     { value: "dataValue", text: "Data Value" },
@@ -35,14 +46,22 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
     startDate,
     endDate,
     users,
+    orgUnits,
+    isLoadingOrgUnits,
     selectedUsername,
     selectedDataType,
+    selectedOrgUnit,
+    includeOrgUnitDescendants,
     excludeScriptLogs,
     onStartDateChange,
     onEndDateChange,
     onUsernameChange,
     onDataTypeChange,
     onExcludeScriptLogsChange,
+    onOrgUnitChange,
+    onOrgUnitSearch,
+    onOrgUnitsScrollEnd,
+    onIncludeOrgUnitDescendantsChange,
 }) => {
     const handleStartDateChange = React.useCallback(
         (dateM: Moment | null) => {
@@ -61,6 +80,7 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
     );
 
     const [inputValue, setInputValue] = useState<string>("");
+    const [orgUnitInputValue, setOrgUnitInputValue] = useState<string>("");
 
     const selectedUser = useMemo(() => {
         if (!selectedUsername) return null;
@@ -79,6 +99,21 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
             setInputValue(newInputValue);
         },
         []
+    );
+
+    const handleOrgUnitChange = React.useCallback(
+        (_event: React.ChangeEvent<{}>, value: OrgUnit | null) => {
+            onOrgUnitChange(value);
+        },
+        [onOrgUnitChange]
+    );
+
+    const handleOrgUnitInputChange = React.useCallback(
+        (_event: React.ChangeEvent<{}>, newInputValue: string) => {
+            setOrgUnitInputValue(newInputValue);
+            onOrgUnitSearch(newInputValue);
+        },
+        [onOrgUnitSearch]
     );
 
     return (
@@ -120,6 +155,66 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
                     }}
                 />
             </AutocompleteContainer>
+            <AutocompleteContainer>
+                <Autocomplete
+                    id="org-unit-autocomplete"
+                    options={
+                        isLoadingOrgUnits && orgUnits.length > 0
+                            ? [...orgUnits, LOADING_SENTINEL]
+                            : orgUnits
+                    }
+                    getOptionLabel={(option: OrgUnit) =>
+                        option.id === LOADING_SENTINEL.id ? "" : option.name
+                    }
+                    getOptionDisabled={(option: OrgUnit) => option.id === LOADING_SENTINEL.id}
+                    filterOptions={(options: OrgUnit[]) => options}
+                    renderOption={(option: OrgUnit) =>
+                        option.id === LOADING_SENTINEL.id ? (
+                            <OrgUnitLoaderItem>
+                                <CircularProgress size={18} />
+                            </OrgUnitLoaderItem>
+                        ) : (
+                            <span>{option.name}</span>
+                        )
+                    }
+                    value={selectedOrgUnit}
+                    inputValue={orgUnitInputValue}
+                    onInputChange={handleOrgUnitInputChange}
+                    onChange={handleOrgUnitChange}
+                    style={{ width: 300 }}
+                    ListboxProps={{
+                        onScroll: (event: React.UIEvent<HTMLUListElement>) => {
+                            if (isLoadingOrgUnits) return;
+                            const el = event.currentTarget;
+                            if (el.scrollTop + el.clientHeight >= el.scrollHeight - 5) {
+                                onOrgUnitsScrollEnd();
+                            }
+                        },
+                    }}
+                    renderInput={(params: AutocompleteRenderInputParams) => (
+                        <TextField
+                            {...params}
+                            label={i18n.t("Organisation Unit")}
+                            variant="standard"
+                        />
+                    )}
+                />
+            </AutocompleteContainer>
+            <CheckboxContainer>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={includeOrgUnitDescendants}
+                            disabled={!selectedOrgUnit}
+                            onChange={e =>
+                                onIncludeOrgUnitDescendantsChange(Boolean(e.target.checked))
+                            }
+                            color="primary"
+                        />
+                    }
+                    label={i18n.t("Include descendants")}
+                />
+            </CheckboxContainer>
             <CheckboxContainer>
                 <FormControlLabel
                     control={
@@ -193,6 +288,13 @@ const AutocompleteContainer = styled.div`
 
 const DropdownContainer = styled.div`
     margin-top: 14px;
+`;
+
+const OrgUnitLoaderItem = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+    width: 100%;
 `;
 
 const CheckboxContainer = styled.div`

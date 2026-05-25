@@ -1,5 +1,5 @@
 WITH unioned AS (
-    SELECT 
+    SELECT
         dva.created,
         dva.modifiedby,
         dva.audittype,
@@ -21,7 +21,7 @@ WITH unioned AS (
     LEFT JOIN categoryoptioncombo aoc ON dva.attributeoptioncomboid = aoc.categoryoptioncomboid
     LEFT JOIN categoryoptioncombo coc ON dva.categoryoptioncomboid = coc.categoryoptioncomboid
     LEFT JOIN (
-    SELECT 
+    SELECT
         de.dataelementid,
         STRING_AGG(
             DISTINCT COALESCE(ds.name, ds.uid),
@@ -34,11 +34,11 @@ WITH unioned AS (
      WHERE dva.created >= '${startDate}'::date
       AND dva.created < ('${endDate}'::date + INTERVAL '1 day')
       AND (
-        '${username}' = 'ALL' OR 
+        '${username}' = 'ALL' OR
         MD5(dva.modifiedby) = '${username}'
       )
       AND (
-        '${dataType}' = 'ALL' OR 
+        '${dataType}' = 'ALL' OR
         '${dataType}' = 'dataValue'
       )
       AND (
@@ -47,24 +47,30 @@ WITH unioned AS (
       )
       AND (
         '${orgUnitIds}' = 'ALL' OR
-        (ou.path IS NOT NULL AND EXISTS (
-            SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
-            WHERE ou.path LIKE '%/' || trim(t.uid) || '/%' OR ou.path LIKE '%/' || trim(t.uid)
-        ))
+        CASE '${includeDescendants}'
+            WHEN 'true' THEN
+                ou.path IS NOT NULL AND EXISTS (
+                    SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
+                    WHERE ou.path LIKE '%/' || trim(t.uid) || '/%' OR ou.path LIKE '%/' || trim(t.uid)
+                )
+            ELSE
+                ou.uid = ANY(string_to_array('${orgUnitIds}', '_'))
+        END
       )
 
     UNION ALL
 
-    SELECT 
+    SELECT
        tedva.created,
        tedva.modifiedby,
        tedva.audittype,
        tedva.value,
        'trackedEntityDataValue' AS datatype,
        CONCAT(
+            'Organisation Unit: ', COALESCE(ou_psi.name, ou_psi.uid, ''), E'\n',
             'Event: ', COALESCE(psi.uid, ''), E'\n',
             'Data Element: ', COALESCE(de2.name, de2.uid, ''), E'\n',
-            CASE 
+            CASE
                 WHEN p.type = 'WITH_REGISTRATION' THEN
                     CONCAT(
                         E'\n',
@@ -83,11 +89,11 @@ WITH unioned AS (
     WHERE tedva.created >= '${startDate}'::date
       AND tedva.created < ('${endDate}'::date + INTERVAL '1 day')
       AND (
-        '${username}' = 'ALL' OR 
+        '${username}' = 'ALL' OR
         MD5(tedva.modifiedby) = '${username}'
       )
       AND (
-        '${dataType}' = 'ALL' OR 
+        '${dataType}' = 'ALL' OR
         '${dataType}' = 'trackedEntityDataValue'
       )
       AND (
@@ -100,21 +106,27 @@ WITH unioned AS (
       )
       AND (
         '${orgUnitIds}' = 'ALL' OR
-        (ou_psi.path IS NOT NULL AND EXISTS (
-            SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
-            WHERE ou_psi.path LIKE '%/' || trim(t.uid) || '/%' OR ou_psi.path LIKE '%/' || trim(t.uid)
-        ))
+        CASE '${includeDescendants}'
+            WHEN 'true' THEN
+                ou_psi.path IS NOT NULL AND EXISTS (
+                    SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
+                    WHERE ou_psi.path LIKE '%/' || trim(t.uid) || '/%' OR ou_psi.path LIKE '%/' || trim(t.uid)
+                )
+            ELSE
+                ou_psi.uid = ANY(string_to_array('${orgUnitIds}', '_'))
+        END
       )
 
     UNION ALL
 
-    SELECT 
+    SELECT
        teava.created,
        teava.modifiedby,
        teava.audittype,
        teava.value,
        'trackedEntityAttributeValue' AS datatype,
        CONCAT(
+            'Organisation Unit: ', COALESCE(ou_tei.name, ou_tei.uid, ''), E'\n',
             'Tracked Entity Instance: ', COALESCE(tei.uid, ''), E'\n',
             'Attribute: ', COALESCE(tea.name, tea.uid, '')
        ) AS related
@@ -125,11 +137,11 @@ WITH unioned AS (
     WHERE teava.created >= '${startDate}'::date
       AND teava.created < ('${endDate}'::date + INTERVAL '1 day')
       AND (
-        '${username}' = 'ALL' OR 
+        '${username}' = 'ALL' OR
         MD5(teava.modifiedby) = '${username}'
       )
       AND (
-        '${dataType}' = 'ALL' OR 
+        '${dataType}' = 'ALL' OR
         '${dataType}' = 'trackedEntityAttributeValue'
       )
       AND (
@@ -148,21 +160,27 @@ WITH unioned AS (
       )
       AND (
         '${orgUnitIds}' = 'ALL' OR
-        (ou_tei.path IS NOT NULL AND EXISTS (
-            SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
-            WHERE ou_tei.path LIKE '%/' || trim(t.uid) || '/%' OR ou_tei.path LIKE '%/' || trim(t.uid)
-        ))
+        CASE '${includeDescendants}'
+            WHEN 'true' THEN
+                ou_tei.path IS NOT NULL AND EXISTS (
+                    SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
+                    WHERE ou_tei.path LIKE '%/' || trim(t.uid) || '/%' OR ou_tei.path LIKE '%/' || trim(t.uid)
+                )
+            ELSE
+                ou_tei.uid = ANY(string_to_array('${orgUnitIds}', '_'))
+        END
       )
 
     UNION ALL
 
-    SELECT 
+    SELECT
        teia.created,
        teia.accessedby AS modifiedby,
        teia.audittype,
        teia.comment AS value,
        'trackedEntityInstance' AS datatype,
        CONCAT(
+            'Organisation Unit: ', COALESCE(ou_teia.name, ou_teia.uid, ''), E'\n',
             'Tracked Entity Instance: ', COALESCE(teia.trackedentityinstance, '')
        ) AS related
     FROM trackedentityinstanceaudit teia
@@ -171,11 +189,11 @@ WITH unioned AS (
     WHERE teia.created >= '${startDate}'::date
       AND teia.created < ('${endDate}'::date + INTERVAL '1 day')
       AND (
-        '${username}' = 'ALL' OR 
+        '${username}' = 'ALL' OR
         MD5(teia.accessedby) = '${username}'
       )
       AND (
-        '${dataType}' = 'ALL' OR 
+        '${dataType}' = 'ALL' OR
         '${dataType}' = 'trackedEntityInstance'
       )
       AND (
@@ -195,10 +213,15 @@ WITH unioned AS (
       )
       AND (
         '${orgUnitIds}' = 'ALL' OR
-        (ou_teia.path IS NOT NULL AND EXISTS (
-            SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
-            WHERE ou_teia.path LIKE '%/' || trim(t.uid) || '/%' OR ou_teia.path LIKE '%/' || trim(t.uid)
-        ))
+        CASE '${includeDescendants}'
+            WHEN 'true' THEN
+                ou_teia.path IS NOT NULL AND EXISTS (
+                    SELECT 1 FROM unnest(string_to_array('${orgUnitIds}', '_')) AS t(uid)
+                    WHERE ou_teia.path LIKE '%/' || trim(t.uid) || '/%' OR ou_teia.path LIKE '%/' || trim(t.uid)
+                )
+            ELSE
+                ou_teia.uid = ANY(string_to_array('${orgUnitIds}', '_'))
+        END
       )
 )
 
