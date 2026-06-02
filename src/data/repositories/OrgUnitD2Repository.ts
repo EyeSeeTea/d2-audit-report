@@ -25,7 +25,11 @@ export class OrgUnitD2Repository implements OrgUnitRepository {
         }
     }
 
-    private getSingleScope(query: string, userOrgUnitId: string, page: number): FutureData<OrgUnitsPage> {
+    private getSingleScope(
+        query: string,
+        userOrgUnitId: string,
+        page: number
+    ): FutureData<OrgUnitsPage> {
         const filter: Record<string, object> = { path: { like: `/${userOrgUnitId}` } };
         if (query) filter["name"] = { ilike: query };
 

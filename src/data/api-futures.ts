@@ -26,7 +26,12 @@ export function apiToFuture<Data>(res: CancelableResponse<Data>): FutureData<Dat
 
 function isAbortError(err: unknown): boolean {
     if (err instanceof Error && err.name === "AbortError") return true;
-    if (typeof DOMException !== "undefined" && err instanceof DOMException && err.name === "AbortError") return true;
+    if (
+        typeof DOMException !== "undefined" &&
+        err instanceof DOMException &&
+        err.name === "AbortError"
+    )
+        return true;
     if (err && typeof err === "object" && "message" in err) {
         const msg = String((err as { message: unknown }).message);
         if (msg.toLowerCase().includes("aborted")) return true;

@@ -39,7 +39,11 @@ export function useObjectsTableFuture<Obj extends ReferenceObject>(
             sorting: config.initialSorting,
             selection: config.initialSelection,
         }),
-        [config.initialSelection, config.initialSorting, config.paginationOptions.pageSizeInitialValue]
+        [
+            config.initialSelection,
+            config.initialSorting,
+            config.paginationOptions.pageSizeInitialValue,
+        ]
     );
 
     const [state, setState] = useState<State<Obj>>(() => ({

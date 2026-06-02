@@ -9,10 +9,7 @@ import { User } from "$/domain/entities/User";
 import { OrgUnit } from "$/domain/entities/OrgUnit";
 import { Maybe } from "$/utils/ts-utils";
 import { useDebounce } from "$/webapp/hooks/useDebounce";
-import {
-    GetRowsFuture,
-    useObjectsTableFuture,
-} from "$/webapp/hooks/useObjectsTableFuture";
+import { GetRowsFuture, useObjectsTableFuture } from "$/webapp/hooks/useObjectsTableFuture";
 
 export function useDhis2Audits(
     getAudits: GetAuditsUseCase,
