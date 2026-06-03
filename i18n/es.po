@@ -1,0 +1,72 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: i18next-conv\n"
+"POT-Creation-Date: 2026-06-02T08:27:26.133Z\n"
+"PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "D2Logger"
+msgstr ""
+
+msgid "Dhis2"
+msgstr ""
+
+msgid "Audit"
+msgstr ""
+
+msgid "Start Date"
+msgstr ""
+
+msgid "End Date"
+msgstr ""
+
+msgid "Data Type"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Organisation Unit"
+msgstr ""
+
+msgid "Include descendants"
+msgstr ""
+
+msgid "Exclude script logs"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Related"
+msgstr ""
+
+msgid "Back"
+msgstr "Volver"
+
+msgid "Help"
+msgstr "Ayuda"
+
+msgid "Search by name"
+msgstr ""
+
+#~ msgid "Add"
+#~ msgstr "Añadir"
+
+#~ msgid "List"
+#~ msgstr "Listar"
+
+#~ msgid "Hello {{name}}"
+#~ msgstr "Hola {{name}}"
+
+#~ msgid "Section"
+#~ msgstr "Sección"
