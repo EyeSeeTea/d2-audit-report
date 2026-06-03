@@ -10,6 +10,7 @@ export const Audits: React.FC = React.memo(() => {
         <AuditsContent
             getAudits={compositionRoot.audits.getAll}
             getAllUsers={compositionRoot.users.getAll}
+            getOrgUnits={compositionRoot.orgUnits.get}
             d2LoggerAuditsConfig={compositionRoot.audits.getD2LoggerAuditsConfig()}
             title={i18n.t("Audit")}
             hasGutterBottom

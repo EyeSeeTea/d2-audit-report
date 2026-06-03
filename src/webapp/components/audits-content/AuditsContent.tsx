@@ -3,6 +3,7 @@ import { Dhis2Audits } from "$/webapp/components/dhis2-audits/Dhis2Audits";
 import { d2LoggerAudits as D2LoggerAudits } from "$/webapp/components/d2logger-audits/d2LoggerAudits";
 import { GetAllUsersUseCase } from "$/domain/usecases/GetAllUsersUseCase";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
+import { GetOrgUnitsUseCase } from "$/domain/usecases/GetOrgUnitsUseCase";
 import { ViewKey } from "$/webapp/components/audit-selector/AuditSelector";
 import { Maybe } from "$/utils/ts-utils";
 import { D2LoggerAuditsConfig } from "$/types/D2LoggerAuditsConfig";
@@ -12,6 +13,7 @@ import { Header } from "$/webapp/components/header/Header";
 type AuditsContentProps = {
     getAudits: GetAuditsUseCase;
     getAllUsers: GetAllUsersUseCase;
+    getOrgUnits: GetOrgUnitsUseCase;
     d2LoggerAuditsConfig: Maybe<D2LoggerAuditsConfig>;
     title?: string;
     d2LoggerTabTitle?: string;
@@ -25,6 +27,7 @@ export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
     ({
         getAudits,
         getAllUsers,
+        getOrgUnits,
         d2LoggerAuditsConfig,
         title,
         d2LoggerTabTitle,
@@ -51,7 +54,12 @@ export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
 
                 <Container>
                     {currentViewKey === "dhis2" ? (
-                        <Dhis2Audits getAudits={getAudits} getAllUsers={getAllUsers} />
+                        <Dhis2Audits
+                            getAudits={getAudits}
+                            getAllUsers={getAllUsers}
+                            getOrgUnits={getOrgUnits}
+                            excludedProgramId={d2LoggerAuditsConfig.programId}
+                        />
                     ) : (
                         <D2LoggerAudits
                             baseUrl={d2LoggerAuditsConfig.baseUrl}
@@ -72,7 +80,12 @@ export const AuditsContent: React.FC<AuditsContentProps> = React.memo(
                     hasD2LoggerAudits={false}
                     hasGutterBottom={hasGutterBottom}
                 />
-                <Dhis2Audits getAudits={getAudits} getAllUsers={getAllUsers} />
+                <Dhis2Audits
+                    getAudits={getAudits}
+                    getAllUsers={getAllUsers}
+                    getOrgUnits={getOrgUnits}
+                    excludedProgramId={undefined}
+                />
             </>
         );
     }

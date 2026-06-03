@@ -85,8 +85,8 @@ export const tableConfig: TableConfig<Audit> = {
         pageSizeOptions: [10, 25, 50, 100],
         pageSizeInitialValue: 10,
         renderPosition: {
-            bottom: true,
-            top: false,
+            bottom: false,
+            top: true,
         },
     },
     initialSorting: {

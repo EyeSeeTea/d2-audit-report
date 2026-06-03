@@ -7,6 +7,7 @@ export type UserAttrs = {
     username: string;
     userRoles: UserRole[];
     userGroups: NamedRef[];
+    orgUnits: NamedRef[];
 };
 
 export type UserRole = {

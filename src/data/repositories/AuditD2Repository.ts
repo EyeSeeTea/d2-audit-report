@@ -3,16 +3,18 @@ import { D2Api } from "$/types/d2-api";
 import { FutureData } from "$/data/api-futures";
 import { Future } from "$/domain/entities/generic/Future";
 import { Audit } from "$/domain/entities/Audit";
-import { AuditType } from "@eyeseetea/d2-api/api/audit";
 import { generateUid } from "$/utils/uid";
 import { PaginatedResponse } from "$/domain/entities/PaginatedResponse";
 import { ensureSQLView } from "$/data/utils/ensureSQLView";
 import { Dhis2SqlViews, SqlViewGetData } from "$/data/sql-view/Dhis2SqlViews";
 import { AuditsFilters } from "$/domain/usecases/GetAuditsUseCase";
 import { encodeUsername } from "$/data/utils/usernameEncoder";
+import { Maybe } from "$/utils/ts-utils";
+
+const SCRIPT_LOGS_USERNAME = "adrian@eyeseetea.com";
 
 export class AuditD2Repository implements AuditRepository {
-    private sqlViewId: string | null = null;
+    private sqlViewId: Maybe<string> = undefined;
 
     constructor(private api: D2Api) {}
 
@@ -34,6 +36,12 @@ export class AuditD2Repository implements AuditRepository {
                 endDate: filters.endDate || "2100-12-31",
                 username: filters.username ? encodeUsername(filters.username) : "ALL",
                 dataType: filters.dataType || "ALL",
+                excludedProgramId: filters.excludedProgramId ?? "ANY",
+                excludedUser: filters.excludeScriptLogs
+                    ? encodeUsername(SCRIPT_LOGS_USERNAME)
+                    : "ANY",
+                orgUnitIds: filters.orgUnitIds?.length ? filters.orgUnitIds.join("_") : "ALL",
+                includeDescendants: filters.includeOrgUnitDescendants === false ? "false" : "true",
             };
 
             return new Dhis2SqlViews(this.api)
@@ -43,21 +51,10 @@ export class AuditD2Repository implements AuditRepository {
                 })
                 .map(response => {
                     const objects = this.mapSqlViewResponseToAudits(response);
-                    const pager = response.pager || {
-                        page: filters.page,
-                        pageSize: filters.pageSize,
-                        total: objects.length,
-                        pageCount: 1,
-                    };
 
                     return {
                         objects,
-                        pager: {
-                            page: pager.page,
-                            pageSize: pager.pageSize,
-                            total: pager.total,
-                            pageCount: pager.pageCount,
-                        },
+                        pager: response.pager,
                     };
                 });
         });
@@ -70,11 +67,11 @@ export class AuditD2Repository implements AuditRepository {
             return new Audit({
                 id: generateUid(),
                 created: getValue("created"),
-                modifiedBy: getValue("modifiedby") || undefined,
-                auditType: getValue("audittype") as AuditType,
-                value: getValue("value") || undefined,
+                modifiedBy: getValue("modifiedby"),
+                auditType: getValue("audittype"),
+                value: getValue("value"),
                 dataType: getValue("datatype"),
-                related: getValue("related") || undefined,
+                related: getValue("related"),
             });
         });
     }
