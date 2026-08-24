@@ -18,7 +18,10 @@ export class DatasetD2Repository implements DatasetRepository {
                     order: "displayName:asc",
                 })
             ).map(response =>
-                response.objects.map(d2Dataset => ({ id: d2Dataset.id, name: d2Dataset.displayName }))
+                response.objects.map(d2Dataset => ({
+                    id: d2Dataset.id,
+                    name: d2Dataset.displayName,
+                }))
             )
         );
     }

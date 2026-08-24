@@ -18,7 +18,10 @@ export class ProgramD2Repository implements ProgramRepository {
                     order: "displayName:asc",
                 })
             ).map(response =>
-                response.objects.map(d2Program => ({ id: d2Program.id, name: d2Program.displayName }))
+                response.objects.map(d2Program => ({
+                    id: d2Program.id,
+                    name: d2Program.displayName,
+                }))
             )
         );
     }
