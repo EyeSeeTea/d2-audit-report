@@ -57,6 +57,16 @@ WITH unioned AS (
                 ou.uid = ANY(string_to_array('${orgUnitIds}', '_'))
         END
       )
+      AND (
+        '${datasetId}' = 'ALL' OR
+        EXISTS (
+            SELECT 1
+            FROM datasetelement dse
+            JOIN dataset ds2 ON ds2.datasetid = dse.datasetid
+            WHERE dse.dataelementid = dva.dataelementid
+              AND ds2.uid = '${datasetId}'
+        )
+      )
 
     UNION ALL
 
@@ -99,6 +109,10 @@ WITH unioned AS (
       AND (
         '${excludedProgramId}' = 'ANY' OR
         p.uid != '${excludedProgramId}'
+      )
+      AND (
+        '${programId}' = 'ALL' OR
+        p.uid = '${programId}'
       )
       AND (
         '${excludedUser}' = 'ANY' OR
@@ -152,6 +166,16 @@ WITH unioned AS (
             JOIN program p2 ON p2.programid = pi.programid
             WHERE pi.trackedentityinstanceid = teava.trackedentityinstanceid
               AND p2.uid = '${excludedProgramId}'
+        )
+      )
+      AND (
+        '${programId}' = 'ALL' OR
+        EXISTS (
+            SELECT 1
+            FROM programinstance pi2
+            JOIN program p3 ON p3.programid = pi2.programid
+            WHERE pi2.trackedentityinstanceid = teava.trackedentityinstanceid
+              AND p3.uid = '${programId}'
         )
       )
       AND (
@@ -209,6 +233,17 @@ WITH unioned AS (
             JOIN program p2 ON p2.programid = pi.programid
             WHERE tei_audit.uid = teia.trackedentityinstance
               AND p2.uid = '${excludedProgramId}'
+        )
+      )
+      AND (
+        '${programId}' = 'ALL' OR
+        EXISTS (
+            SELECT 1
+            FROM trackedentityinstance tei_audit2
+            JOIN programinstance pi3 ON pi3.trackedentityinstanceid = tei_audit2.trackedentityinstanceid
+            JOIN program p4 ON p4.programid = pi3.programid
+            WHERE tei_audit2.uid = teia.trackedentityinstance
+              AND p4.uid = '${programId}'
         )
       )
       AND (

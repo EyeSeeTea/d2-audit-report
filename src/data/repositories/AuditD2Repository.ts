@@ -42,6 +42,8 @@ export class AuditD2Repository implements AuditRepository {
                     : "ANY",
                 orgUnitIds: filters.orgUnitIds?.length ? filters.orgUnitIds.join("_") : "ALL",
                 includeDescendants: filters.includeOrgUnitDescendants === false ? "false" : "true",
+                datasetId: filters.datasetId ?? "ALL",
+                programId: filters.programId ?? "ALL",
             };
 
             return new Dhis2SqlViews(this.api)
