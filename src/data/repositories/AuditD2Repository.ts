@@ -11,7 +11,7 @@ import { AuditsFilters } from "$/domain/usecases/GetAuditsUseCase";
 import { encodeUsername } from "$/data/utils/usernameEncoder";
 import { Maybe } from "$/utils/ts-utils";
 
-const SCRIPT_LOGS_USERNAME = "adrian@eyeseetea.com";
+const SCRIPT_LOGS_USERNAME = "scripts";
 
 export class AuditD2Repository implements AuditRepository {
     private sqlViewId: Maybe<string> = undefined;
