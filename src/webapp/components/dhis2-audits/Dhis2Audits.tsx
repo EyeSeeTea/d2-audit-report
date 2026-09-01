@@ -5,6 +5,8 @@ import { usePaginationTextModifier } from "./usePaginationTextModifier";
 import { GetAuditsUseCase } from "$/domain/usecases/GetAuditsUseCase";
 import { GetAllUsersUseCase } from "$/domain/usecases/GetAllUsersUseCase";
 import { GetOrgUnitsUseCase } from "$/domain/usecases/GetOrgUnitsUseCase";
+import { GetDatasetsUseCase } from "$/domain/usecases/GetDatasetsUseCase";
+import { GetProgramsUseCase } from "$/domain/usecases/GetProgramsUseCase";
 import { AuditsFiltersComponent } from "$/webapp/components/dhis2-audits/AuditsFiltersComponent";
 import styled from "styled-components";
 import { Maybe } from "$/utils/ts-utils";
@@ -13,11 +15,13 @@ type Dhis2AuditsProps = {
     getAudits: GetAuditsUseCase;
     getAllUsers: GetAllUsersUseCase;
     getOrgUnits: GetOrgUnitsUseCase;
+    getDatasets: GetDatasetsUseCase;
+    getPrograms: GetProgramsUseCase;
     excludedProgramId: Maybe<string>;
 };
 
 export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
-    ({ getAudits, getAllUsers, getOrgUnits, excludedProgramId }) => {
+    ({ getAudits, getAllUsers, getOrgUnits, getDatasets, getPrograms, excludedProgramId }) => {
         const snackbar = useSnackbar();
         const {
             objectsListProps,
@@ -32,6 +36,10 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
             isLoadingOrgUnits,
             selectedOrgUnit,
             includeOrgUnitDescendants,
+            datasets,
+            programs,
+            selectedDatasetId,
+            selectedProgramId,
             onStartDateChange,
             onEndDateChange,
             onUsernameChange,
@@ -41,7 +49,16 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
             onOrgUnitSearch,
             onOrgUnitsScrollEnd,
             onIncludeOrgUnitDescendantsChange,
-        } = useDhis2Audits(getAudits, getAllUsers, getOrgUnits, excludedProgramId);
+            onDatasetIdChange,
+            onProgramIdChange,
+        } = useDhis2Audits(
+            getAudits,
+            getAllUsers,
+            getOrgUnits,
+            getDatasets,
+            getPrograms,
+            excludedProgramId
+        );
 
         const containerRef = usePaginationTextModifier(
             objectsListProps.pagination,
@@ -67,6 +84,10 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
                     selectedOrgUnit={selectedOrgUnit}
                     includeOrgUnitDescendants={includeOrgUnitDescendants}
                     excludeScriptLogs={excludeScriptLogs}
+                    datasets={datasets}
+                    programs={programs}
+                    selectedDatasetId={selectedDatasetId}
+                    selectedProgramId={selectedProgramId}
                     onStartDateChange={onStartDateChange}
                     onEndDateChange={onEndDateChange}
                     onUsernameChange={onUsernameChange}
@@ -76,6 +97,8 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
                     onOrgUnitSearch={onOrgUnitSearch}
                     onOrgUnitsScrollEnd={onOrgUnitsScrollEnd}
                     onIncludeOrgUnitDescendantsChange={onIncludeOrgUnitDescendantsChange}
+                    onDatasetIdChange={onDatasetIdChange}
+                    onProgramIdChange={onProgramIdChange}
                 />
             ),
             [
@@ -89,6 +112,10 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
                 selectedOrgUnit,
                 includeOrgUnitDescendants,
                 excludeScriptLogs,
+                datasets,
+                programs,
+                selectedDatasetId,
+                selectedProgramId,
                 onStartDateChange,
                 onEndDateChange,
                 onUsernameChange,
@@ -98,6 +125,8 @@ export const Dhis2Audits: React.FC<Dhis2AuditsProps> = React.memo(
                 onOrgUnitSearch,
                 onOrgUnitsScrollEnd,
                 onIncludeOrgUnitDescendantsChange,
+                onDatasetIdChange,
+                onProgramIdChange,
             ]
         );
 

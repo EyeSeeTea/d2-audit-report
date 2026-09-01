@@ -43,6 +43,8 @@ export const AuditsLib: React.FC<AuditsLibProps> = React.memo(
                         getAudits={compositionRoot.audits.getAll}
                         getAllUsers={compositionRoot.users.getAll}
                         getOrgUnits={compositionRoot.orgUnits.search}
+                        getDatasets={compositionRoot.datasets.getAll}
+                        getPrograms={compositionRoot.programs.getAll}
                         d2LoggerAuditsConfig={
                             d2LoggerAuditsConfig ? { ...d2LoggerAuditsConfig, baseUrl } : undefined
                         }
