@@ -2,12 +2,18 @@ import { UserRepository } from "$/domain/repositories/UserRepository";
 import { AuditD2Repository } from "./data/repositories/AuditD2Repository";
 import { UserD2Repository } from "./data/repositories/UserD2Repository";
 import { OrgUnitD2Repository } from "./data/repositories/OrgUnitD2Repository";
+import { DatasetD2Repository } from "./data/repositories/DatasetD2Repository";
+import { ProgramD2Repository } from "./data/repositories/ProgramD2Repository";
 import { AuditRepository } from "./domain/repositories/AuditRepository";
 import { OrgUnitRepository } from "./domain/repositories/OrgUnitRepository";
+import { DatasetRepository } from "./domain/repositories/DatasetRepository";
+import { ProgramRepository } from "./domain/repositories/ProgramRepository";
 import { GetAuditsUseCase } from "./domain/usecases/GetAuditsUseCase";
 import { GetCurrentUserUseCase } from "./domain/usecases/GetCurrentUserUseCase";
 import { GetAllUsersUseCase } from "./domain/usecases/GetAllUsersUseCase";
 import { GetOrgUnitsUseCase } from "./domain/usecases/GetOrgUnitsUseCase";
+import { GetDatasetsUseCase } from "./domain/usecases/GetDatasetsUseCase";
+import { GetProgramsUseCase } from "./domain/usecases/GetProgramsUseCase";
 import { D2Api } from "./types/d2-api";
 import { Maybe } from "$/utils/ts-utils";
 import { D2LoggerAuditsConfig } from "$/types/D2LoggerAuditsConfig";
@@ -18,6 +24,8 @@ type Repositories = {
     userRepository: UserRepository;
     auditRepository: AuditRepository;
     orgUnitRepository: OrgUnitRepository;
+    datasetRepository: DatasetRepository;
+    programRepository: ProgramRepository;
 };
 
 /**
@@ -51,6 +59,12 @@ export function getWebappCompositionRoot(api: D2Api) {
                 repositories.userRepository
             ),
         },
+        datasets: {
+            getAll: new GetDatasetsUseCase(repositories.datasetRepository),
+        },
+        programs: {
+            getAll: new GetProgramsUseCase(repositories.programRepository),
+        },
     };
 }
 
@@ -59,5 +73,7 @@ function getRepositories(api: D2Api): Repositories {
         userRepository: new UserD2Repository(api),
         auditRepository: new AuditD2Repository(api),
         orgUnitRepository: new OrgUnitD2Repository(api),
+        datasetRepository: new DatasetD2Repository(api),
+        programRepository: new ProgramD2Repository(api),
     };
 }

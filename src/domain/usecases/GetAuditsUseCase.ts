@@ -15,6 +15,8 @@ export type AuditsFilters = {
     excludeScriptLogs?: boolean;
     includeOrgUnitDescendants?: boolean;
     orgUnitIds?: string[];
+    datasetId?: string;
+    programId?: string;
 };
 
 export class GetAuditsUseCase {

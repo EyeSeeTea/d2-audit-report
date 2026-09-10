@@ -11,7 +11,7 @@ import { AuditsFilters } from "$/domain/usecases/GetAuditsUseCase";
 import { encodeUsername } from "$/data/utils/usernameEncoder";
 import { Maybe } from "$/utils/ts-utils";
 
-const SCRIPT_LOGS_USERNAME = "adrian@eyeseetea.com";
+const SCRIPT_LOGS_USERNAME = "scripts";
 
 export class AuditD2Repository implements AuditRepository {
     private sqlViewId: Maybe<string> = undefined;
@@ -42,6 +42,8 @@ export class AuditD2Repository implements AuditRepository {
                     : "ANY",
                 orgUnitIds: filters.orgUnitIds?.length ? filters.orgUnitIds.join("_") : "ALL",
                 includeDescendants: filters.includeOrgUnitDescendants === false ? "false" : "true",
+                datasetId: filters.datasetId ?? "ALL",
+                programId: filters.programId ?? "ALL",
             };
 
             return new Dhis2SqlViews(this.api)

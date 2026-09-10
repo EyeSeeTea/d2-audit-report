@@ -7,6 +7,8 @@ import { Checkbox, CircularProgress, FormControlLabel, TextField } from "@materi
 import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import { User } from "$/domain/entities/User";
 import { OrgUnit } from "$/domain/entities/OrgUnit";
+import { Dataset } from "$/domain/entities/Dataset";
+import { Program } from "$/domain/entities/Program";
 import { Dropdown } from "$/webapp/components/dropdown/Dropdown";
 import { DropdownItem } from "$/webapp/components/dropdown/GenericDropdown";
 import { Maybe } from "$/utils/ts-utils";
@@ -22,6 +24,10 @@ interface AuditsFiltersComponentProps {
     selectedOrgUnit: OrgUnit | null;
     includeOrgUnitDescendants: boolean;
     excludeScriptLogs: boolean;
+    datasets: Dataset[];
+    programs: Program[];
+    selectedDatasetId: Maybe<string>;
+    selectedProgramId: Maybe<string>;
     onStartDateChange: (date: Date | null) => void;
     onEndDateChange: (date: Date | null) => void;
     onUsernameChange: (username: Maybe<string>) => void;
@@ -31,6 +37,8 @@ interface AuditsFiltersComponentProps {
     onOrgUnitSearch: (query: string) => void;
     onOrgUnitsScrollEnd: () => void;
     onIncludeOrgUnitDescendantsChange: (value: boolean) => void;
+    onDatasetIdChange: (datasetId: Maybe<string>) => void;
+    onProgramIdChange: (programId: Maybe<string>) => void;
 }
 
 const LOADING_SENTINEL: OrgUnit = { id: "__loading__", name: "" };
@@ -40,6 +48,12 @@ const dataTypeOptions: DropdownItem[] = [
     { value: "trackedEntityDataValue", text: "Tracked Entity Data Value" },
     { value: "trackedEntityAttributeValue", text: "Tracked Entity Attribute Value" },
     { value: "trackedEntityInstance", text: "Tracked Entity Instance" },
+];
+
+const TRACKER_DATA_TYPES = [
+    "trackedEntityDataValue",
+    "trackedEntityAttributeValue",
+    "trackedEntityInstance",
 ];
 
 export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
@@ -53,6 +67,10 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
     selectedOrgUnit,
     includeOrgUnitDescendants,
     excludeScriptLogs,
+    datasets,
+    programs,
+    selectedDatasetId,
+    selectedProgramId,
     onStartDateChange,
     onEndDateChange,
     onUsernameChange,
@@ -62,6 +80,8 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
     onOrgUnitSearch,
     onOrgUnitsScrollEnd,
     onIncludeOrgUnitDescendantsChange,
+    onDatasetIdChange,
+    onProgramIdChange,
 }) => {
     const handleStartDateChange = React.useCallback(
         (dateM: Moment | null) => {
@@ -116,6 +136,19 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
         [onOrgUnitSearch]
     );
 
+    const isDatasetFilterVisible = selectedDataType === "dataValue";
+    const isProgramFilterVisible = TRACKER_DATA_TYPES.includes(selectedDataType || "");
+
+    const datasetOptions: DropdownItem[] = useMemo(
+        () => datasets.map(dataset => ({ value: dataset.id, text: dataset.name })),
+        [datasets]
+    );
+
+    const programOptions: DropdownItem[] = useMemo(
+        () => programs.map(program => ({ value: program.id, text: program.name })),
+        [programs]
+    );
+
     return (
         <PickersContainer>
             <DatePickerContainer>
@@ -140,6 +173,26 @@ export const AuditsFiltersComponent: React.FC<AuditsFiltersComponentProps> = ({
                     onChange={onDataTypeChange}
                 />
             </DropdownContainer>
+            {isDatasetFilterVisible && (
+                <DropdownContainer>
+                    <Dropdown
+                        label={i18n.t("Dataset")}
+                        items={datasetOptions}
+                        value={selectedDatasetId}
+                        onChange={onDatasetIdChange}
+                    />
+                </DropdownContainer>
+            )}
+            {isProgramFilterVisible && (
+                <DropdownContainer>
+                    <Dropdown
+                        label={i18n.t("Program")}
+                        items={programOptions}
+                        value={selectedProgramId}
+                        onChange={onProgramIdChange}
+                    />
+                </DropdownContainer>
+            )}
             <AutocompleteContainer>
                 <Autocomplete
                     id="user-autocomplete"
