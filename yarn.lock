@@ -3019,10 +3019,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.1.tgz#de633db3ec2ef6a3c89e2f19038063e8a122e2c2"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
-"@eyeseetea/d2-api@^1":
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/@eyeseetea/d2-api/-/d2-api-1.17.0.tgz#b04e3f5861519d6b6549587c5b1f8367613e242b"
-  integrity sha512-POr9vcVKoY6lLW3ZpNfi2ZfTBT9PjYjx9dKYFEDvGQBuXJu355yhhoWZ/HFEKYyaXyHmXNtALQki/kAFcJwoyw==
+"@eyeseetea/d2-api@^1.21.0":
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/@eyeseetea/d2-api/-/d2-api-1.21.0.tgz#dd7bbd11a04760f302463e54a79a848821d05520"
+  integrity sha512-5MKdB022a0/w/q40GdrWLIOcBSJIWusHf7LGc5rODG/2m6LF3LGq4UBicVxi0VK0fTRF46H6wTMGZCWexSgm6w==
   dependencies:
     abort-controller "3.0.0"
     axios "1.6.4"
@@ -3033,7 +3033,6 @@
     iconv-lite "0.6.2"
     lodash "4.17.21"
     qs "6.9.7"
-    react "^16.12.0"
 
 "@eyeseetea/d2-ui-components@^2":
   version "2.11.0"
@@ -8581,15 +8580,6 @@ react@18.2.0:
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
   dependencies:
     loose-envify "^1.1.0"
-
-react@^16.12.0:
-  version "16.14.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
-  integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
 
 "readable-stream@2 || 3", readable-stream@^3.5.0, readable-stream@^3.6.0:
   version "3.6.2"
