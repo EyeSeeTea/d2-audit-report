@@ -35,9 +35,10 @@ export class UserD2Repository implements UserRepository {
         return new User({
             id: d2User.id,
             name: d2User.displayName,
+            username: d2User.username,
+            userRoles: d2User.userRoles,
             userGroups: d2User.userGroups,
             orgUnits: d2User.organisationUnits || [],
-            ...d2User.userCredentials,
         });
     }
 }
@@ -45,11 +46,9 @@ export class UserD2Repository implements UserRepository {
 const userFieldsBase = {
     id: true,
     displayName: true,
+    username: true,
+    userRoles: { id: true, name: true, authorities: true },
     userGroups: { id: true, name: true },
-    userCredentials: {
-        username: true,
-        userRoles: { id: true, name: true, authorities: true },
-    },
 } as const;
 
 const userFieldsWithOrgUnits = {

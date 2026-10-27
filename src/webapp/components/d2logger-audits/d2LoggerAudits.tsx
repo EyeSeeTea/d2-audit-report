@@ -15,7 +15,7 @@ export const d2LoggerAudits: React.FC<Dhis2AuditsProps> = React.memo(
                 stylesOptions={stylesOptions}
                 reloadKey={0}
                 height="100%"
-                src={`${baseUrl}/dhis-web-capture/index.html#/?programId=${programId}&orgUnitId=${orgUnitId}`}
+                src={`${baseUrl}/dhis-web-capture/index.html?redirect=false#/?programId=${programId}&orgUnitId=${orgUnitId}`}
             />
         );
     }
