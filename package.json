@@ -97,6 +97,7 @@
             "optional": false
         }
     },
+    "packageManager": "yarn@1.22.22",
     "scripts": {
         "build-dependencies-visualizer": "vite-bundle-visualizer",
         "check-code": "yarn lint && yarn test",
