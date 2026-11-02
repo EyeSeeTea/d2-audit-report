@@ -90,14 +90,14 @@
         "@dhis2/ui": {
             "optional": false
         },
-        "@eyeseetea/d2-ui-components": {
+        "@eyeseetea/d2-api": {
             "optional": false
         },
-        "@eyeseetea/d2-api": {
+        "@eyeseetea/d2-ui-components": {
             "optional": false
         }
     },
-    "packageManager": "yarn@1.22.22",
+    "packageManager": "yarn@4.15.0",
     "scripts": {
         "build-dependencies-visualizer": "vite-bundle-visualizer",
         "check-code": "yarn lint && yarn test",

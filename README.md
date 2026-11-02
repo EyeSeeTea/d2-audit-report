@@ -9,13 +9,20 @@ $ nvm use # uses node version in .nvmrc
 $ yarn install
 ```
 
+This project uses **Yarn 4** managed by **Corepack** and declares `"packageManager": "yarn@4.15.0"`. If `yarn --version` does not print 4.x inside the repo (for example because of a global Yarn 1), do this once on your machine:
+
+```
+$ npm uninstall -g yarn # optional but recommended
+$ corepack enable
+$ corepack prepare yarn@1.22.22 --activate # default for projects without packageManager
+```
+
 ## SQL view
 
 Audits are read from the `d2-audit-report` SQL view. DHIS2 renamed and replaced the audit tables across versions, so there is one query per supported version in `src/data/sql-view/`:
 
 | DHIS2 version | Query file               |
 | ------------- | ------------------------ |
-| 2.40          | `d2-audit-report-40.sql` |
 | 2.41          | `d2-audit-report-41.sql` |
 | 2.42          | `d2-audit-report-42.sql` |
 | 2.43+         | `d2-audit-report-43.sql` |
