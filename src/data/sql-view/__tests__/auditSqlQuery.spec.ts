@@ -2,13 +2,6 @@ import { describe, expect, it } from "vitest";
 import { getAuditSqlQuery } from "$/data/sql-view/auditSqlQuery";
 
 describe("getAuditSqlQuery", () => {
-    it("uses pre-2.41 table names for 2.40", () => {
-        const sqlQuery = getAuditSqlQuery("2.40.5");
-
-        expect(sqlQuery).toContain("FROM trackedentitydatavalueaudit");
-        expect(sqlQuery).toContain("JOIN programstageinstance");
-    });
-
     it("uses renamed tracker tables for 2.41", () => {
         const sqlQuery = getAuditSqlQuery("2.41.10");
 
@@ -35,6 +28,10 @@ describe("getAuditSqlQuery", () => {
 
     it("uses the latest query for newer and snapshot versions", () => {
         expect(getAuditSqlQuery("2.44-SNAPSHOT")).toBe(getAuditSqlQuery("2.43.1"));
+    });
+
+    it("fails for versions older than 2.41", () => {
+        expect(() => getAuditSqlQuery("2.40.5")).toThrow("Unsupported DHIS2 version");
     });
 
     it("fails for an unknown version format", () => {
