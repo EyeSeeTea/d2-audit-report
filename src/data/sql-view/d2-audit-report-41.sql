@@ -91,7 +91,7 @@ WITH unioned AS (
             END
        ) AS related
     FROM trackedentitydatavalueaudit tedva
-    LEFT JOIN programstageinstance psi ON tedva.programstageinstanceid = psi.programstageinstanceid
+    LEFT JOIN event psi ON tedva.eventid = psi.eventid
     LEFT JOIN organisationunit ou_psi ON psi.organisationunitid = ou_psi.organisationunitid
     LEFT JOIN dataelement de2 ON tedva.dataelementid = de2.dataelementid
     LEFT JOIN programstage ps2 ON psi.programstageid = ps2.programstageid
@@ -145,7 +145,7 @@ WITH unioned AS (
             'Attribute: ', COALESCE(tea.name, tea.uid, '')
        ) AS related
     FROM trackedentityattributevalueaudit teava
-    LEFT JOIN trackedentityinstance tei ON teava.trackedentityinstanceid = tei.trackedentityinstanceid
+    LEFT JOIN trackedentity tei ON teava.trackedentityid = tei.trackedentityid
     LEFT JOIN organisationunit ou_tei ON tei.organisationunitid = ou_tei.organisationunitid
     LEFT JOIN trackedentityattribute tea ON teava.trackedentityattributeid = tea.trackedentityattributeid
     WHERE teava.created >= '${startDate}'::date
@@ -162,9 +162,9 @@ WITH unioned AS (
         '${excludedProgramId}' = 'ANY' OR
         NOT EXISTS (
             SELECT 1
-            FROM programinstance pi
+            FROM enrollment pi
             JOIN program p2 ON p2.programid = pi.programid
-            WHERE pi.trackedentityinstanceid = teava.trackedentityinstanceid
+            WHERE pi.trackedentityid = teava.trackedentityid
               AND p2.uid = '${excludedProgramId}'
         )
       )
@@ -172,9 +172,9 @@ WITH unioned AS (
         '${programId}' = 'ALL' OR
         EXISTS (
             SELECT 1
-            FROM programinstance pi2
+            FROM enrollment pi2
             JOIN program p3 ON p3.programid = pi2.programid
-            WHERE pi2.trackedentityinstanceid = teava.trackedentityinstanceid
+            WHERE pi2.trackedentityid = teava.trackedentityid
               AND p3.uid = '${programId}'
         )
       )
@@ -205,10 +205,10 @@ WITH unioned AS (
        'trackedEntityInstance' AS datatype,
        CONCAT(
             'Organisation Unit: ', COALESCE(ou_teia.name, ou_teia.uid, ''), E'\n',
-            'Tracked Entity Instance: ', COALESCE(teia.trackedentityinstance, '')
+            'Tracked Entity Instance: ', COALESCE(teia.trackedentity, '')
        ) AS related
-    FROM trackedentityinstanceaudit teia
-    LEFT JOIN trackedentityinstance tei_ou ON tei_ou.uid = teia.trackedentityinstance
+    FROM trackedentityaudit teia
+    LEFT JOIN trackedentity tei_ou ON tei_ou.uid = teia.trackedentity
     LEFT JOIN organisationunit ou_teia ON tei_ou.organisationunitid = ou_teia.organisationunitid
     WHERE teia.created >= '${startDate}'::date
       AND teia.created < ('${endDate}'::date + INTERVAL '1 day')
@@ -228,10 +228,10 @@ WITH unioned AS (
         '${excludedProgramId}' = 'ANY' OR
         NOT EXISTS (
             SELECT 1
-            FROM trackedentityinstance tei_audit
-            JOIN programinstance pi ON pi.trackedentityinstanceid = tei_audit.trackedentityinstanceid
+            FROM trackedentity tei_audit
+            JOIN enrollment pi ON pi.trackedentityid = tei_audit.trackedentityid
             JOIN program p2 ON p2.programid = pi.programid
-            WHERE tei_audit.uid = teia.trackedentityinstance
+            WHERE tei_audit.uid = teia.trackedentity
               AND p2.uid = '${excludedProgramId}'
         )
       )
@@ -239,10 +239,10 @@ WITH unioned AS (
         '${programId}' = 'ALL' OR
         EXISTS (
             SELECT 1
-            FROM trackedentityinstance tei_audit2
-            JOIN programinstance pi3 ON pi3.trackedentityinstanceid = tei_audit2.trackedentityinstanceid
+            FROM trackedentity tei_audit2
+            JOIN enrollment pi3 ON pi3.trackedentityid = tei_audit2.trackedentityid
             JOIN program p4 ON p4.programid = pi3.programid
-            WHERE tei_audit2.uid = teia.trackedentityinstance
+            WHERE tei_audit2.uid = teia.trackedentity
               AND p4.uid = '${programId}'
         )
       )
